@@ -5,7 +5,12 @@ import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/controller/shop_list_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
+import 'package:nightly/utils/constants/size_constants.dart';
+import 'package:nightly/utils/logging/app_logger.dart';
 import 'package:nightly/views/common_widgets.dart/common_progress_indicator.dart';
+import 'package:nightly/views/common_widgets.dart/custom_refresh.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sizer/sizer.dart';
 
 class ShopListScreen extends StatefulWidget {
   @override
@@ -15,6 +20,7 @@ class ShopListScreen extends StatefulWidget {
 class _ShopListScreenState extends State<ShopListScreen> {
   ShopListController _shopListController;
   MainController _mainController;
+  RefreshController _refreshController = RefreshController();
   @override
   void initState() {
     _mainController = Get.find();
@@ -23,7 +29,7 @@ class _ShopListScreenState extends State<ShopListScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       //  Future.delayed(const Duration(milliseconds: 2500), () {
-      _shopListController.fetchShops();
+      _shopListController.fetchShops(false);
       // });
     });
     super.initState();
@@ -50,7 +56,40 @@ class _ShopListScreenState extends State<ShopListScreen> {
         body: Obx(
           () => Stack(
             children: [
-              _shopListController.commonListView(),
+              Column(
+                children: [
+                  Expanded(
+                    child: SmartRefresher(
+                      controller: _refreshController,
+                      enablePullDown: true,
+                      header: const CustomRefresh(),
+                      onRefresh: () async {
+                        await _shopListController.fetchShops(true);
+                        _refreshController.refreshCompleted();
+                      },
+                      child: Obx(
+                        () => !_shopListController.isOnline.value
+                            ? Center(
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 15.h),
+                                  child: Text(
+                                    'No Internet! Check Connectivity',
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                      color: ColorConstants.appTheme,
+                                      // fontFamily: 'Poppins',
+                                      fontSize: SizeConstants.subHeaderSize,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : _shopListController.commonListView(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               _mainController.isLoaderActive.value
                   ? const CommonProgressIndicator()
                   : Container()

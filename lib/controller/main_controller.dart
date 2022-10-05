@@ -102,6 +102,43 @@ class MainController extends GetxController {
     return true;
   }
 
+  Future<loc.LocationData> requestPermissionAgain() async {
+    isLocationEnabled.value = false;
+    isServiceLocationEnabled.value = false;
+
+    loc.LocationData _locationData;
+
+    isServiceLocationEnabled.value = await location.serviceEnabled();
+    _permissionGranted = await location.hasPermission();
+    AppLogger.log("location service value: ${isServiceLocationEnabled.value}");
+    AppLogger.log("app location value: $_permissionGranted");
+    if (isServiceLocationEnabled.value) {
+      if (_permissionGranted != loc.PermissionStatus.denied &&
+          _permissionGranted != loc.PermissionStatus.deniedForever) {
+        isLocationEnabled.value = true;
+        Future.delayed(const Duration(milliseconds: 1000), () async {
+          _locationData = await location.getLocation();
+          return _locationData;
+        });
+      } else {
+        _permissionGranted = await location.requestPermission();
+
+        if (_permissionGranted == loc.PermissionStatus.denied ||
+            _permissionGranted == loc.PermissionStatus.deniedForever) {
+          return Future.error('APP Location permission are disabled.');
+        } else {
+          isLocationEnabled.value = true;
+          Future.delayed(const Duration(milliseconds: 1000), () async {
+            _locationData = await location.getLocation();
+            return _locationData;
+          });
+        }
+      }
+    } else {
+      return Future.error('GPS Location services are disabled.');
+    }
+  }
+
   Future<loc.LocationData> getCurrentLocationData() async {
     isLocationEnabled.value = false;
     isServiceLocationEnabled.value = false;
@@ -132,7 +169,8 @@ class MainController extends GetxController {
       }
     } else {
       await location.requestService();
-      return Future.error('GPS Location services are disabled.');
+      return await requestPermissionAgain();
+      // return Future.error('GPS Location services are disabled.');
     }
   }
 

@@ -33,9 +33,15 @@ class ShopListController extends GetxController {
   int pageStart = 0;
   int pageSize = 50;
   List<String> emptyListOfString = <String>[];
+  RxBool isOnline = false.obs;
 
-  fetchShops() async {
-    _mainController.isLoaderActive.value = true;
+  checkOnline() async {
+    isOnline.value = await _mainController.isOnline();
+  }
+
+  fetchShops(bool isFromRefresh) async {
+    checkOnline();
+    isFromRefresh ? 0 : _mainController.isLoaderActive.value = true;
     _mainController.isLoadingList.value = true;
     try {
       await _mainController.saveCurrentLocation();
@@ -44,56 +50,63 @@ class ShopListController extends GetxController {
       _mainController.isLoadingList.value = false;
       AppLogger.logError("@save current location:" + err.toString());
     }
-    try {
-      await GeneralService()
-          .getShops(
-              emptyListOfString,
-              emptyListOfString,
-              emptyListOfString,
-              emptyListOfString,
-              30,
-              500,
-              _mainController.latitude.value,
-              _mainController.longitude.value,
-              _mainController.currentLocation.value,
-              0.0,
-              pageStart,
-              pageSize,
-              sortBy.toString().split(".")[1],
-              sortByHighToLow.toString().split(".")[1],
-              "",
-              emptyListOfString,
-              emptyListOfString,
-              emptyListOfString)
-          .then((response) async {
-        if (response['statusCode'] == 200) {
-          await Shop.fromJsonToList(response['body']).then((shops) async {
-            //  _hasMore = cooks.length >= _pageSize;
 
-            // if (offset == 0) {
-            //   this.cooks.clear();
-            // }
-            if (shops != null) {
-              this.shops.addAll(shops);
-            }
+    if (isOnline.value) {
+      try {
+        await GeneralService()
+            .getShops(
+                emptyListOfString,
+                emptyListOfString,
+                emptyListOfString,
+                emptyListOfString,
+                30,
+                500,
+                _mainController.latitude.value,
+                _mainController.longitude.value,
+                _mainController.currentLocation.value,
+                0.0,
+                pageStart,
+                pageSize,
+                sortBy.toString().split(".")[1],
+                sortByHighToLow.toString().split(".")[1],
+                "",
+                emptyListOfString,
+                emptyListOfString,
+                emptyListOfString)
+            .then((response) async {
+          if (response['statusCode'] == 200) {
+            await Shop.fromJsonToList(response['body']).then((shops) async {
+              //  _hasMore = cooks.length >= _pageSize;
+
+              // if (offset == 0) {
+              //   this.cooks.clear();
+              // }
+              if (shops != null) {
+                this.shops.addAll(shops);
+              }
+              _mainController.isLoaderActive.value = false;
+              _mainController.isLoadingList.value = false;
+            });
+          } else {
             _mainController.isLoaderActive.value = false;
             _mainController.isLoadingList.value = false;
-          });
-        } else {
+            _mainController.snackBar(
+                response['body']['msg'], 'Check your connectivity');
+          }
+        }).catchError((err) {
           _mainController.isLoaderActive.value = false;
           _mainController.isLoadingList.value = false;
-          _mainController.snackBar(
-              response['body']['msg'], 'Check your connectivity');
-        }
-      }).catchError((err) {
+          AppLogger.logError("@while getting shops:" + err.toString());
+        });
+      } catch (err) {
         _mainController.isLoaderActive.value = false;
         _mainController.isLoadingList.value = false;
-        AppLogger.logError("@while getting shops:" + err.toString());
-      });
-    } catch (err) {
+        AppLogger.logError("@fetch cooks:" + err.toString());
+      }
+    } else {
+      _mainController.snackBar("No Internet", 'Check your connectivity');
       _mainController.isLoaderActive.value = false;
       _mainController.isLoadingList.value = false;
-      AppLogger.logError("@fetch cooks:" + err.toString());
     }
   }
 
