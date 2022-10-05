@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:nightly/utils/constants/text_constants.dart';
 import 'package:nightly/utils/logging/print_logs.dart';
 
 class AppLogger {
@@ -7,7 +9,7 @@ class AppLogger {
 
   static void log(String logStr, {isPretty = false}) {
     try {
-      if (1 == 1) {
+      if (dotenv.env['ENVIRONMENT_NAME'] != TextConstants.ENVIRONMENT_PROD) {
         if (!isPretty) {
           print("" + logStr);
         } else {
@@ -21,7 +23,7 @@ class AppLogger {
 
   static void logError(String logStr, {isPretty = true}) {
     try {
-      if (1 == 1) {
+      if (dotenv.env['ENVIRONMENT_NAME'] != TextConstants.ENVIRONMENT_PROD) {
         if (!isPretty) {
           print("" + logStr);
         } else {

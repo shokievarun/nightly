@@ -5,20 +5,20 @@ import 'package:nightly/services/api_base_helper.dart';
 class GeneralService {
   final ApiBaseHelper _helper = ApiBaseHelper();
 
-  static GeneralService _generalService;
+  // static GeneralService _generalService;
 
-  GeneralService.createInstance();
+  // GeneralService.createInstance();
 
-  // ignore: missing_return
-  factory GeneralService() {
-    if (_generalService == null) {
-      _generalService = GeneralService.createInstance();
+  // // ignore: missing_return
+  // factory GeneralService() {
+  //   if (_generalService == null) {
+  //     _generalService = GeneralService.createInstance();
 
-      return _generalService;
-    }
-  }
+  //     return _generalService;
+  //   }
+  // }
 
-  Future<Map<String, dynamic>> getCooks(
+  Future<Map<String, dynamic>> getShops(
       List<String> foodTypes,
       List<String> foodServices,
       List<String> foodCategories,

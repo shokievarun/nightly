@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/home_controller.dart';
+import 'package:nightly/controller/shop_list_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:sizer/sizer.dart';
 
@@ -17,6 +18,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     _homeController = Get.put(HomeController());
+    // Get.put(ShopListController());
     _homeController.checkLocationPermissions();
     super.initState();
   }

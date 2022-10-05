@@ -15,6 +15,7 @@ class MainController extends GetxController {
   RxDouble latitude = 13.027966.obs;
   RxDouble longitude = 77.540916.obs;
   RxBool isLoaderActive = false.obs;
+  RxBool isLoadingList = false.obs;
   RxBool isLocationEnabled = false.obs;
 
   static bool isLocationPermitted = false;

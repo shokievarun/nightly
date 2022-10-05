@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, unnecessary_this
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
+import 'package:nightly/utils/constants/text_constants.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 import 'package:nightly/utils/logging/log_filter.dart';
 
@@ -26,7 +28,7 @@ class PrintLogs {
   }
 
   void log(String strToLog, {String mode = "debug"}) {
-    if (1 == 1) {
+    if (dotenv.env['ENVIRONMENT_NAME'] != TextConstants.ENVIRONMENT_PROD) {
       try {
         if (mode == "debug") {
           //this.debugLog(strToLog);
@@ -42,7 +44,7 @@ class PrintLogs {
   void debugLog(String strToLog) {}
 
   void logError(String strToLog) {
-    if (1 == 1) {
+    if (dotenv.env['ENVIRONMENT_NAME'] != TextConstants.ENVIRONMENT_PROD) {
       logger.e(strToLog);
     }
   }

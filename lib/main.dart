@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:nightly/views/splashscreen.dart';
 import 'package:sizer/sizer.dart';
@@ -9,6 +10,7 @@ import 'package:sizer/sizer.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await dotenv.load(fileName: "assets/envs/dev.env");
   runApp(Sizer(builder: (context, orientation, deviceType) {
     return
         //    DevicePreview(

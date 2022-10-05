@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
@@ -10,7 +11,7 @@ import 'package:http/http.dart' as http;
 var noInternetErrorBody = {"title": "Error", "msg": "No internet connection"};
 
 class ApiBaseHelper {
-  String apiUrl = "https://thezencooks.herokuapp.com";
+  // String apiUrl = "https://thezencooks.herokuapp.com";
 
   Future<dynamic> get(String url, dynamic headers,
       {addAuthorizationHeader = true}) async {
@@ -25,7 +26,8 @@ class ApiBaseHelper {
 
       final response = await http.get(Uri.parse(
           // cfg.getValue("baseurl")
-          apiUrl + url), headers: headers);
+          dotenv.env['API_BASE_URL'] + url), headers: headers);
+      AppLogger.log("@helper get : " + dotenv.env['API_BASE_URL']);
       responseJson = _returnResponse(response);
     } catch (e) {
       AppLogger.logError("@helper get : " + e.toString());
@@ -47,8 +49,10 @@ class ApiBaseHelper {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         headers['Authorization'] = "Bearer " + preferences.getString("token");
       }
-      final response = await http.post(Uri.parse(apiUrl + url),
-          headers: headers, body: jsonEncode(data));
+      final response = await http.post(
+          Uri.parse(dotenv.env['API_BASE_URL'] + url),
+          headers: headers,
+          body: jsonEncode(data));
       responseJson = _returnResponse(response);
     } on SocketException {
       return {"statusCode": 500, "body": jsonEncode(noInternetErrorBody)};
@@ -67,8 +71,10 @@ class ApiBaseHelper {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         headers['Authorization'] = "Bearer " + preferences.getString("token");
       }
-      final response = await http.put(Uri.parse(apiUrl + url),
-          headers: headers, body: jsonEncode(data));
+      final response = await http.put(
+          Uri.parse(dotenv.env['API_BASE_URL'] + url),
+          headers: headers,
+          body: jsonEncode(data));
       responseJson = _returnResponse(response);
     } on SocketException {
       AppLogger.logError("@base helper put Socket exception occured");
@@ -89,8 +95,10 @@ class ApiBaseHelper {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         headers['Authorization'] = "Bearer " + preferences.getString("token");
       }
-      final response = await http.patch(Uri.parse(apiUrl + url),
-          headers: headers, body: jsonEncode(data));
+      final response = await http.patch(
+          Uri.parse(dotenv.env['API_BASE_URL'] + url),
+          headers: headers,
+          body: jsonEncode(data));
       responseJson = _returnResponse(response);
     } on SocketException {
       AppLogger.logError("@base helper patch Socket exception occured");
@@ -111,7 +119,8 @@ class ApiBaseHelper {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         headers['Authorization'] = "Bearer " + preferences.getString("token");
       }
-      final response = await http.delete(Uri.parse(apiUrl + url + "/" + id),
+      final response = await http.delete(
+          Uri.parse(dotenv.env['API_BASE_URL'] + url + "/" + id),
           headers: headers);
       responseJson = _returnResponse(response);
     } on SocketException {
