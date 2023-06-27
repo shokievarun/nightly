@@ -2,14 +2,14 @@ import 'package:nightly/model/latlng.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 class Shop {
-  String id;
-  String name;
-  String mobile;
-  String image;
-  String location;
-  double distance;
-  LatLng latlng;
-  bool status;
+  String? id;
+  String? name;
+  String? mobile;
+  String? image;
+  String? location;
+  double? distance;
+  LatLng? latlng;
+  bool? status;
 
   Shop();
 
@@ -66,7 +66,7 @@ class Shop {
         shops.add(shop);
       }
     } catch (err) {
-      AppLogger.logError(
+      AppLogger.error(
           " Error @ Shop model adding shop in list: " + err.toString());
     }
 
@@ -106,7 +106,7 @@ class Shop {
 
       shop.status = body['status'];
     } catch (err) {
-      AppLogger.logError(
+      AppLogger.error(
           " Error @ Shop model while getting shop details: " + err.toString());
     }
     return shop;

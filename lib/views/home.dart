@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/home_controller.dart';
-import 'package:nightly/controller/shop_list_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
-import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  HomeController _homeController;
+  HomeController? _homeController;
 
   @override
   void initState() {
-    _homeController = Get.put(HomeController());
+    _homeController = HomeController();
     // Get.put(ShopListController());
-    _homeController.checkLocationPermissions();
+    _homeController!.checkLocationPermissions();
     super.initState();
   }
 
@@ -27,15 +24,15 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
-          color: ColorConstants.appBackgroundTheme,
-          width: 30.w,
-          height: 6.h,
-          alignment: Alignment.center,
-          child: GestureDetector(
-            onTap: () {
-              _homeController.navigateToShopListScreen();
-            },
+        child: GestureDetector(
+          onTap: () {
+            _homeController!.navigateToShopListScreen(context);
+          },
+          child: Container(
+            color: ColorConstants.appBackgroundTheme,
+            width: 300,
+            height: 60,
+            alignment: Alignment.center,
             child: const Text(
               "ShopsList",
               style: TextStyle(color: ColorConstants.appTheme),

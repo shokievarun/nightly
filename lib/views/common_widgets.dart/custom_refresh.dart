@@ -3,7 +3,7 @@ import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CustomRefresh extends StatefulWidget {
-  const CustomRefresh({Key key}) : super(key: key);
+  const CustomRefresh({Key? key}) : super(key: key);
 
   @override
   State<CustomRefresh> createState() => _CustomRefreshState();
@@ -13,7 +13,7 @@ class _CustomRefreshState extends State<CustomRefresh> {
   @override
   Widget build(BuildContext context) {
     return CustomHeader(
-      builder: (BuildContext context, RefreshStatus mode) {
+      builder: (BuildContext context, RefreshStatus? mode) {
         return Container(
           // color: ColorConstants.appTheme,
           width: 40,

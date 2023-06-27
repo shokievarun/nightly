@@ -2,24 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/model/shop.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/size_constants.dart';
-import 'package:sizer/sizer.dart';
 
 class ShopCard extends StatefulWidget {
   Shop shop;
-  ShopCard(this.shop, {Key key}) : super(key: key);
+  ShopCard(this.shop, {Key? key}) : super(key: key);
 
   @override
   State<ShopCard> createState() => _ShopCardState();
 }
 
 class _ShopCardState extends State<ShopCard> {
-  final MainController _mainController = Get.find();
-
+  final MainController _mainController = MainController();
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -30,24 +27,24 @@ class _ShopCardState extends State<ShopCard> {
         child: Card(
             color: Colors.white,
             elevation: 0,
-            margin: EdgeInsets.symmetric(vertical: 2.h, horizontal: 0.w),
+            margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
             child: Container(
-              padding: EdgeInsets.only(
-                  left: 10.sp, right: 10.sp, top: 10.sp, bottom: 10.sp),
+              padding: const EdgeInsets.only(
+                  left: 10, right: 10, top: 10, bottom: 10),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.location_on_outlined,
-                      size: 35.sp,
+                      size: 35,
                     ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // SizedBox(
-                          //   height: 1.h,
+                          //   height: 1,
                           // ),
                           Text(
                             widget.shop.name ?? "",
@@ -70,8 +67,8 @@ class _ShopCardState extends State<ShopCard> {
                               ),
                             ),
                           ]),
-                          SizedBox(
-                            height: 1.h,
+                          const SizedBox(
+                            height: 1,
                           ),
                           Row(children: [
                             Column(
@@ -79,17 +76,17 @@ class _ShopCardState extends State<ShopCard> {
                                 GestureDetector(
                                     onTap: () {
                                       _mainController.openWhatsapp(
-                                        number: widget.shop.mobile,
+                                        number: widget.shop.mobile!,
                                       );
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
-                                      width: 30.sp,
-                                      height: 30.sp,
+                                      width: 30,
+                                      height: 30,
                                       child: SvgPicture.asset(
                                         'assets/images/whatsapp.svg',
-                                        width: 22.sp,
-                                        height: 22.sp,
+                                        width: 22,
+                                        height: 22,
                                         //   color: ColorConstants.appTheme,
                                       ),
                                       decoration: const BoxDecoration(
@@ -97,28 +94,28 @@ class _ShopCardState extends State<ShopCard> {
                                         // color: ColorConstants.appBackgroundTheme
                                       ),
                                     )),
-                                Text("Chat")
+                                const Text("Chat")
                               ],
                             ),
-                            SizedBox(
-                              width: 5.w,
+                            const SizedBox(
+                              width: 5,
                             ),
                             Column(
                               children: [
                                 GestureDetector(
                                     onTap: () {
                                       _mainController.launchCaller(
-                                        widget.shop.mobile,
+                                        widget.shop.mobile!,
                                       );
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
-                                      width: 30.sp,
-                                      height: 30.sp,
+                                      width: 30,
+                                      height: 30,
                                       child: SvgPicture.asset(
                                         'assets/images/telephone.svg',
-                                        width: 24.sp,
-                                        height: 24.sp,
+                                        width: 24,
+                                        height: 24,
                                         //  color: ColorConstants.appTheme,
                                       ),
                                       decoration: const BoxDecoration(
@@ -126,19 +123,19 @@ class _ShopCardState extends State<ShopCard> {
                                         //  color: ColorConstants.appBackgroundTheme
                                       ),
                                     )),
-                                Text("Call")
+                                const Text("Call")
                               ],
                             ),
-                            SizedBox(
-                              width: 5.w,
+                            const SizedBox(
+                              width: 5,
                             ),
-                            Text(widget.shop.status ? "Opened" : "Close"),
+                            Text(widget.shop.status! ? "Opened" : "Close"),
                           ])
                         ],
                       ),
                     ),
-                    SizedBox(
-                      width: 2.w,
+                    const SizedBox(
+                      width: 2,
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -147,18 +144,19 @@ class _ShopCardState extends State<ShopCard> {
                         GestureDetector(
                             onTap: () {
                               _mainController.launchMap(
-                                  widget.shop.latlng.latitude,
-                                  widget.shop.latlng.longitude,
-                                  widget.shop.location);
+                                  widget.shop.latlng!.latitude,
+                                  widget.shop.latlng!.longitude,
+                                  widget.shop.location!,
+                                  context);
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              width: 30.sp,
-                              height: 30.sp,
+                              width: 30,
+                              height: 30,
                               child: SvgPicture.asset(
                                 'assets/images/send.svg',
-                                width: 25.sp,
-                                height: 25.sp,
+                                width: 25,
+                                height: 25,
                                 // color: ColorConstants.appTheme,
                               ),
                               decoration: const BoxDecoration(
@@ -166,7 +164,7 @@ class _ShopCardState extends State<ShopCard> {
                                 //   color: ColorConstants.appBackgroundTheme
                               ),
                             )),
-                        Text("${widget.shop.distance.toInt()} kms")
+                        Text("${widget.shop.distance!.toInt()} kms")
                       ],
                     ),
                   ]),

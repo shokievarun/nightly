@@ -42,11 +42,11 @@ class GeneralService {
         "foodServices=${foodServices.join(",")}&foodTypes=${foodTypes.join(",")}&"
         "cuisines=${cuisines.join(",")}&lat=$lat&lng=$lng&location=$location&rating=$rating&sortBy=$sortOrder&so=$so&experience=$experience&gender=$gender&type=$type&nationality=$nationality";
     final response = await _helper.get(
-        url, {"Content-Type": "application/json"},
-        addAuthorizationHeader: false);
+      url,
+    );
     return {
-      'statusCode': response['statusCode'],
-      'body': jsonDecode(response['body'])
+      'statusCode': response.statusCode,
+      'body': jsonDecode(response.data)
     };
   }
 }
