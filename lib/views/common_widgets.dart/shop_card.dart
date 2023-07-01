@@ -11,7 +11,7 @@ import 'package:sizer/sizer.dart';
 
 class ShopCard extends StatefulWidget {
   Shop shop;
-  ShopCard(this.shop, {Key key}) : super(key: key);
+  ShopCard(this.shop, {Key? key}) : super(key: key);
 
   @override
   State<ShopCard> createState() => _ShopCardState();
@@ -97,7 +97,7 @@ class _ShopCardState extends State<ShopCard> {
                                         // color: ColorConstants.appBackgroundTheme
                                       ),
                                     )),
-                                Text("Chat")
+                                const Text("Chat")
                               ],
                             ),
                             SizedBox(
@@ -108,7 +108,7 @@ class _ShopCardState extends State<ShopCard> {
                                 GestureDetector(
                                     onTap: () {
                                       _mainController.launchCaller(
-                                        widget.shop.mobile,
+                                        widget.shop.mobile!,
                                       );
                                     },
                                     child: Container(
@@ -126,13 +126,13 @@ class _ShopCardState extends State<ShopCard> {
                                         //  color: ColorConstants.appBackgroundTheme
                                       ),
                                     )),
-                                Text("Call")
+                                const Text("Call")
                               ],
                             ),
                             SizedBox(
                               width: 5.w,
                             ),
-                            Text(widget.shop.status ? "Opened" : "Close"),
+                            Text(widget.shop.isOpen! ? "Opened" : "Close"),
                           ])
                         ],
                       ),
@@ -147,9 +147,9 @@ class _ShopCardState extends State<ShopCard> {
                         GestureDetector(
                             onTap: () {
                               _mainController.launchMap(
-                                  widget.shop.latlng.latitude,
-                                  widget.shop.latlng.longitude,
-                                  widget.shop.location);
+                                  widget.shop.latlng!.latitude,
+                                  widget.shop.latlng!.longitude,
+                                  widget.shop.location!);
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -166,7 +166,7 @@ class _ShopCardState extends State<ShopCard> {
                                 //   color: ColorConstants.appBackgroundTheme
                               ),
                             )),
-                        Text("${widget.shop.distance.toInt()} kms")
+                        Text("${widget.shop.distance!.toInt()} kms")
                       ],
                     ),
                   ]),

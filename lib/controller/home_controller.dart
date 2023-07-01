@@ -3,7 +3,7 @@ import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/views/shop_list_screen.dart';
 
 class HomeController extends GetxController {
-  MainController _mainController = Get.find();
+  final MainController _mainController = Get.find();
   checkLocationPermissions() async {
     await _mainController.setServiceLocationEnabled();
     await _mainController.setLocationPermissionEnabled();

@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/home_controller.dart';
-import 'package:nightly/controller/shop_list_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  HomeController _homeController;
+  final HomeController _homeController = Get.put(HomeController());
 
   @override
   void initState() {
-    _homeController = Get.put(HomeController());
     // Get.put(ShopListController());
     _homeController.checkLocationPermissions();
     super.initState();

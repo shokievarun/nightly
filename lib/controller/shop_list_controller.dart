@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:map_launcher/map_launcher.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/model/shop.dart';
 import 'package:nightly/services/general_services.dart';
@@ -48,60 +47,42 @@ class ShopListController extends GetxController {
     } catch (err) {
       _mainController.isLoaderActive.value = false;
       _mainController.isLoadingList.value = false;
-      AppLogger.logError("@save current location:" + err.toString());
+      Logger.error("@save current location:" + err.toString());
     }
 
     if (isOnline.value) {
       try {
-        await GeneralService()
-            .getShops(
-                emptyListOfString,
-                emptyListOfString,
-                emptyListOfString,
-                emptyListOfString,
-                30,
-                500,
-                _mainController.latitude.value,
-                _mainController.longitude.value,
-                _mainController.currentLocation.value,
-                0.0,
-                pageStart,
-                pageSize,
-                sortBy.toString().split(".")[1],
-                sortByHighToLow.toString().split(".")[1],
-                "",
-                emptyListOfString,
-                emptyListOfString,
-                emptyListOfString)
-            .then((response) async {
-          if (response['statusCode'] == 200) {
-            await Shop.fromJsonToList(response['body']).then((shops) async {
-              //  _hasMore = cooks.length >= _pageSize;
+        final response = await GeneralService().getShops();
 
-              // if (offset == 0) {
-              //   this.cooks.clear();
-              // }
-              if (shops != null) {
-                this.shops.addAll(shops);
-              }
-              _mainController.isLoaderActive.value = false;
-              _mainController.isLoadingList.value = false;
-            });
-          } else {
+        if (response['statusCode'] == 200) {
+          await Shop.fromJsonToList(response['data']).then((shops) async {
+            //  _hasMore = cooks.length >= _pageSize;
+
+            // if (offset == 0) {
+            //   this.cooks.clear();
+            // }
+            if (shops.isNotEmpty) {
+              this.shops.addAll(shops);
+            }
             _mainController.isLoaderActive.value = false;
             _mainController.isLoadingList.value = false;
-            _mainController.snackBar(
-                response['body']['msg'], 'Check your connectivity');
-          }
-        }).catchError((err) {
+          });
+        } else {
           _mainController.isLoaderActive.value = false;
           _mainController.isLoadingList.value = false;
-          AppLogger.logError("@while getting shops:" + err.toString());
-        });
+          _mainController.snackBar(
+              response['data']['msg'], 'Check your connectivity');
+        }
+        // }
+        // ).catchError((err) {
+        //   _mainController.isLoaderActive.value = false;
+        //   _mainController.isLoadingList.value = false;
+        //   AppLogger.error("@while getting shops:" + err.toString());
+        // });
       } catch (err) {
         _mainController.isLoaderActive.value = false;
         _mainController.isLoadingList.value = false;
-        AppLogger.logError("@fetch cooks:" + err.toString());
+        Logger.error("@fetch cooks:" + err.toString());
       }
     } else {
       _mainController.snackBar("No Internet", 'Check your connectivity');

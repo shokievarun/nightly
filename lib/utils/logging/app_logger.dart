@@ -1,37 +1,52 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: constant_identifier_names
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:nightly/utils/constants/text_constants.dart';
-import 'package:nightly/utils/logging/print_logs.dart';
+import 'package:flutter/foundation.dart';
 
-class AppLogger {
-  static PrintLogs printLogs = PrintLogs();
+enum LogLevel { DEBUG, INFO, WARNING, ERROR }
 
-  static void log(String logStr, {isPretty = false}) {
-    try {
-      if (dotenv.env['ENVIRONMENT_NAME'] != TextConstants.ENVIRONMENT_PROD) {
-        if (!isPretty) {
-          print("" + logStr);
-        } else {
-          printLogs.log(logStr);
-        }
-      }
-    } catch (e) {
-      AppLogger.logError("@ applogger : " + e);
-    }
+class Logger {
+  static void debug(String message) {
+    logMessage(LogLevel.DEBUG, message);
   }
 
-  static void logError(String logStr, {isPretty = true}) {
-    try {
-      if (dotenv.env['ENVIRONMENT_NAME'] != TextConstants.ENVIRONMENT_PROD) {
-        if (!isPretty) {
-          print("" + logStr);
-        } else {
-          printLogs.logError(logStr);
-        }
+  static void info(String message) {
+    logMessage(LogLevel.INFO, message);
+  }
+
+  static void warning(String message) {
+    logMessage(LogLevel.WARNING, message);
+  }
+
+  static void error(dynamic error, [StackTrace? stackTrace]) {
+    final errorMessage = error.toString();
+    final trace = stackTrace ?? StackTrace.current;
+    logMessage(LogLevel.ERROR, '\x1B[31m$errorMessage\x1B[0m\n$trace');
+  }
+
+  static void logMessage(LogLevel level, String message) {
+    if (!kReleaseMode) {
+      // Print logs to the console in development mode
+      switch (level) {
+        case LogLevel.DEBUG:
+          debugPrint('\x1B[36m[DEBUG]\x1B[0m \x1B[36m$message\x1B[0m',
+              wrapWidth: 1024);
+          break;
+        case LogLevel.INFO:
+          debugPrint('\x1B[32m[INFO]\x1B[0m \x1B[32m$message\x1B[0m',
+              wrapWidth: 1024);
+          break;
+        case LogLevel.WARNING:
+          debugPrint('\x1B[33m[WARNING]\x1B[0m \x1B[33m$message\x1B[0m',
+              wrapWidth: 1024);
+          break;
+        case LogLevel.ERROR:
+          debugPrint('\x1B[31m[ERROR]\x1B[0m \x1B[31m$message\x1B[0m',
+              wrapWidth: 1024);
+          break;
       }
-    } catch (e) {
-      AppLogger.logError("@ applogger : " + e);
+    } else {
+      // Log to a remote server or a file in production mode
+      // Implement logging to a remote server or a file
     }
   }
 }

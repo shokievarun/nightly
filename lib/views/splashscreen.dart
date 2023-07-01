@@ -8,7 +8,7 @@ import 'package:nightly/utils/constants/size_constants.dart';
 import 'package:nightly/views/home.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         backgroundColor: ColorConstants.appBackgroundTheme,
         body: Center(
             child: Text(
-          "nightly",
+          "shopify",
           style: TextStyle(
               fontSize: SizeConstants.titleSize,
               //fontFamily: TextConstants.GOTHAM,

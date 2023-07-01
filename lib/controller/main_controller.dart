@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:nightly/features/login/user_model.dart';
 import 'package:nightly/model/latlng.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:location/location.dart' as loc;
@@ -20,7 +22,7 @@ class MainController extends GetxController {
 
   static bool isLocationPermitted = false;
   RxBool isServiceLocationEnabled = false.obs;
-  loc.PermissionStatus _permissionGranted;
+  loc.PermissionStatus? _permissionGranted;
   loc.Location location = loc.Location();
 
   setServiceLocationEnabled() async {
@@ -29,6 +31,32 @@ class MainController extends GetxController {
     if (!isServiceLocationEnabled.value) {
       await location.requestService();
     }
+  }
+
+  UserModel? userModel;
+
+  final userBox = Hive.box<UserModel>('users');
+
+  void saveUserFromJson(dynamic jsonData) {
+//  final jsonData = json.decode(jsonStr);
+    final user = UserModel(
+      accessToken: jsonData['accessToken'],
+      id: jsonData['user']['_id'],
+      name: jsonData['user']['name'],
+      email: jsonData['user']['email'],
+      number: jsonData['user']['number'],
+    );
+    userModel = user;
+    userBox.put('user', user);
+  }
+
+  UserModel? getUser() {
+    return userBox.get('user');
+  }
+
+  void deleteUser() {
+    userModel = null;
+    userBox.delete('user');
   }
 
   setLocationPermissionEnabled() async {
@@ -47,9 +75,9 @@ class MainController extends GetxController {
       loc.LocationData position = await getCurrentLocationData();
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
-          position.latitude, position.longitude,
+          position.latitude!, position.longitude!,
           localeIdentifier: "en");
-      currentLatLng = LatLng(position.latitude, position.longitude);
+      currentLatLng = LatLng(position.latitude!, position.longitude!);
       var cnt = 0;
 
       if (placemarks[0].subLocality != null &&
@@ -64,7 +92,7 @@ class MainController extends GetxController {
           !currentLocation.value.contains(placemarks[0].locality.toString())) {
         currentLocation.value = (cnt == 1
             ? "${currentLocation.value}, ${placemarks[0].locality}"
-            : placemarks[0].locality);
+            : placemarks[0].locality!);
         cnt++;
       }
       if (placemarks[0].subAdministrativeArea != null &&
@@ -74,7 +102,7 @@ class MainController extends GetxController {
               .contains(placemarks[0].subAdministrativeArea.toString())) {
         currentLocation.value = (cnt == 1
             ? "${currentLocation.value}, ${placemarks[0].subAdministrativeArea}"
-            : placemarks[0].subAdministrativeArea);
+            : placemarks[0].subAdministrativeArea!);
         cnt++;
       }
       if (placemarks[0].administrativeArea != null &&
@@ -84,7 +112,7 @@ class MainController extends GetxController {
               .contains(placemarks[0].administrativeArea.toString())) {
         currentLocation.value = (cnt == 1
             ? "${currentLocation.value}, ${placemarks[0].administrativeArea}"
-            : placemarks[0].administrativeArea);
+            : placemarks[0].administrativeArea!);
         cnt++;
       }
       if (placemarks[0].country != null &&
@@ -93,16 +121,17 @@ class MainController extends GetxController {
       List<String> locationList = currentLocation.value.split(",");
       currentLocation.value = locationList.last;
 
-      latitude.value = position.latitude;
-      longitude.value = position.longitude;
+      latitude.value = position.latitude!;
+      longitude.value = position.longitude!;
     } catch (err) {
       snackBar("Error", err.toString());
-      AppLogger.logError("@ saveCurrent location " + err.toString());
+      Logger.error("@ saveCurrent location " + err.toString());
     }
     return true;
   }
 
-  Future<loc.LocationData> requestPermissionAgain() async {
+  //Future<loc.LocationData>
+  requestPermissionAgain() async {
     isLocationEnabled.value = false;
     isServiceLocationEnabled.value = false;
 
@@ -110,8 +139,8 @@ class MainController extends GetxController {
 
     isServiceLocationEnabled.value = await location.serviceEnabled();
     _permissionGranted = await location.hasPermission();
-    AppLogger.log("location service value: ${isServiceLocationEnabled.value}");
-    AppLogger.log("app location value: $_permissionGranted");
+    Logger.info("location service value: ${isServiceLocationEnabled.value}");
+    Logger.info("app location value: $_permissionGranted");
     if (isServiceLocationEnabled.value) {
       if (_permissionGranted != loc.PermissionStatus.denied &&
           _permissionGranted != loc.PermissionStatus.deniedForever) {
@@ -147,8 +176,8 @@ class MainController extends GetxController {
 
     isServiceLocationEnabled.value = await location.serviceEnabled();
     _permissionGranted = await location.hasPermission();
-    AppLogger.log("location service value: ${isServiceLocationEnabled.value}");
-    AppLogger.log("app location value: $_permissionGranted");
+    Logger.info("location service value: ${isServiceLocationEnabled.value}");
+    Logger.info("app location value: $_permissionGranted");
     if (isServiceLocationEnabled.value) {
       if (_permissionGranted != loc.PermissionStatus.denied &&
           _permissionGranted != loc.PermissionStatus.deniedForever) {
@@ -185,14 +214,14 @@ class MainController extends GetxController {
   //           isLocationSericeRequested == false) {
   //         bool loc1 = await Permission.locationWhenInUse.request().isGranted;
 
-  //         AppLogger.log("loc1: " + loc1.toString());
+  //         Logger.info("loc1: " + loc1.toString());
   //         await LocalDB.setData("bool", "isLocationServiceRequested", true);
   //       } else if (isLocationSericeRequested == true) {
   //         await location.requestService();
   //       }
   //     }
   //   } catch (e) {
-  //     AppLogger.logError("ERROR @requestLocationService : e: " + e.toString());
+  //     Logger.error("ERROR @requestLocationService : e: " + e.toString());
   //   }
   // }
 
@@ -205,11 +234,12 @@ class MainController extends GetxController {
 
   launchMap(double lat, double lng, String loc) async {
     try {
-      if (await MapLauncher.isMapAvailable(MapType.google)) {
+      var isValid = await MapLauncher.isMapAvailable(MapType.google);
+      if (isValid != null && isValid) {
         await MapLauncher.showMarker(
             mapType: MapType.google,
             coords: Coords(13.0399748, 77.51834839999992),
-            title: "nightly",
+            title: "shopify",
             description: loc,
             zoom: 50);
       } else {
@@ -217,7 +247,7 @@ class MainController extends GetxController {
       }
     } catch (err) {
       snackBar("Error", "Could not connect try after sometime");
-      AppLogger.logError("@ map launch: " + err.toString());
+      Logger.error("@ map launch: " + err.toString());
     }
 
     // if (await MapLauncher.isMapAvailable(MapType.google)) {
@@ -258,7 +288,7 @@ class MainController extends GetxController {
       }
     } catch (err) {
       snackBar("Error", "Could not connect try after sometime");
-      AppLogger.logError("@brower tap: " + err.toString());
+      Logger.error("@brower tap: " + err.toString());
     }
   }
 
@@ -272,11 +302,11 @@ class MainController extends GetxController {
       }
     } catch (e) {
       snackBar("Error", "Could not dial");
-      AppLogger.logError("@phone tap: " + e.toString());
+      Logger.error("@phone tap: " + e.toString());
     }
   }
 
-  void openWhatsapp({String number}) async {
+  void openWhatsapp({String? number}) async {
     try {
       var whatsappURL = Uri.parse("https://wa.me/$number");
       //    if (await canLaunchUrl(whatsappURL)) {
@@ -286,7 +316,7 @@ class MainController extends GetxController {
       // }
     } catch (e) {
       snackBar("Error", 'Whatsapp not installed');
-      AppLogger.logError("@whatsapp tap: " + e.toString());
+      Logger.error("@whatsapp tap: " + e.toString());
     }
   }
 }

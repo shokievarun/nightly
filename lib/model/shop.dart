@@ -2,14 +2,14 @@ import 'package:nightly/model/latlng.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 class Shop {
-  String id;
-  String name;
-  String mobile;
-  String image;
-  String location;
-  double distance;
-  LatLng latlng;
-  bool status;
+  String? id;
+  String? name;
+  String? mobile;
+  String? image;
+  String? location;
+  double? distance;
+  LatLng? latlng;
+  bool? isOpen;
 
   Shop();
 
@@ -21,11 +21,7 @@ class Shop {
         Shop shop = Shop();
         shop.id = ele['_id'];
 
-        if (ele['firstname'] == null) {
-          shop.name = "";
-        } else {
-          shop.name = ele['firstname'];
-        }
+        shop.name = ele['name'];
 
         if (ele['mobile'] == null) {
           shop.mobile = "";
@@ -58,15 +54,15 @@ class Shop {
                 : LatLng(13.027966, 77.540916);
 
         if (ele['status'] == null) {
-          shop.status = false;
+          shop.isOpen = false;
         } else {
-          shop.status = true;
+          shop.isOpen = true;
         }
 
         shops.add(shop);
       }
     } catch (err) {
-      AppLogger.logError(
+      Logger.error(
           " Error @ Shop model adding shop in list: " + err.toString());
     }
 
@@ -77,7 +73,7 @@ class Shop {
     Shop shop = Shop();
     try {
       shop.id = body['id'];
-      shop.name = body['firstname'];
+      shop.name = body['name'];
       shop.mobile = body['mobile'];
 
       if (body['avatar'] != null && body['avatar'] != "") {
@@ -104,9 +100,9 @@ class Shop {
                 : null;
       }
 
-      shop.status = body['status'];
+      shop.isOpen = body['status'];
     } catch (err) {
-      AppLogger.logError(
+      Logger.error(
           " Error @ Shop model while getting shop details: " + err.toString());
     }
     return shop;
