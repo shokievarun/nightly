@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/extensions/common_extensions.dart';
 import 'package:nightly/features/login/login_service.dart';
+import 'package:nightly/features/login/user_model.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_strings.dart';
 import 'package:nightly/utils/constants/common_functions.dart';
@@ -14,8 +14,6 @@ import 'package:nightly/utils/logging/app_logger.dart';
 
 ///Auth Controller
 class LoginController extends GetxController {
-  final MainController _mainController = Get.find();
-
   ///initializing variables for auth controller
   RxBool isPhoneValid = false.obs;
   RxBool isNameValid = false.obs;
@@ -186,8 +184,14 @@ class LoginController extends GetxController {
         otpSent.value = true;
         isLoading.value = false;
         resetAndStartTimer();
+      } else {
+        isLoading.value = false;
       }
     }
+  }
+
+  Future<bool> registerUser(String name, String email, String number) async {
+    return await loginService.registerUser(name, email, number);
   }
 
   ///function to verfy otp
@@ -200,9 +204,10 @@ class LoginController extends GetxController {
               ? true
               : isEmailValid.value && isOtpValid.value) {
         isLoading.value = true;
-        await loginService.verifyOTP(phoneNumber, int.parse(otp));
+        UserModel? userModel =
+            await loginService.verifyOTP(phoneNumber, int.parse(otp));
 
-        if (_mainController.userModel != null) {
+        if (userModel != null) {
           showOtpInvalid.value = false;
           otpVerified.value = true;
 
@@ -216,6 +221,8 @@ class LoginController extends GetxController {
           resetValues();
           isLoading.value = false;
           otpController.clear();
+          Get.back();
+          //   Get.to(() => const Home());
           if (!isCustomerExist.value) {
           } else {}
         } else {

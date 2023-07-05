@@ -34,10 +34,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  http: ^0.13.5
+  # http: ^0.13.5
   get: 4.6.1
-  sizer: ^2.0.15
-  shared_preferences: ^2.0.6
+  # sizer: ^2.0.15
+  # shared_preferences: ^2.0.6
   # logger: ^1.1.0  
   # global_configuration: ^2.0.0-nullsafety.1
   location: ^4.3.0
@@ -45,19 +45,30 @@ dependencies:
   url_launcher: ^6.1.6
   # map_launcher: ^2.4.0
   flutter_svg: ^1.0.3
-  flutter_dotenv: ^5.0.2
-  app_settings: ^4.1.3
+  # flutter_dotenv: ^5.0.2
+  # app_settings: ^4.1.3
   pull_to_refresh: ^2.0.0
   geocoding: ^2.1.0
   map_launcher: ^2.5.0+1
   dio: ^5.2.1+1
-  web_socket_channel: ^2.4.0
-  hive: ^2.0.4
-  hive_flutter: ^1.1.0
-  hive_generator: ^1.1.0
-  build_runner: ^2.1.5
-  cached_network_image: ^3.2.3
+  # web_socket_channel: ^2.4.0
+  # hive: ^2.0.4
+  # hive_flutter: ^1.1.0
+  # hive_generator: ^1.1.0
+  # build_runner: ^2.1.5
+  # cached_network_image: ^3.2.3
   pinput: ^2.2.21
+  # flutter packages pub run build_runner build --delete-conflicting-outputs
+  # flutter packages pub run build_runner build
+
+
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  hive_generator: ^2.0.0
+  build_runner: ^2.3.3
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.2.3
+  flutter_cache_manager: ^3.3.0
   # device_preview: ^0.8.0
 
 dev_dependencies:
@@ -85,9 +96,41 @@ flutter:
 
   assets:
     - assets/images/
-
+    - assets/icons/
+    - assets/icons/bottom_bar/unselected/
+    - assets/icons/bottom_bar/selected/
+    - assets/icons/account/
+    - assets/images/payments/
+    - assets/images/
+    - assets/icons/drawer/
+    - assets/icons/search/
+    - assets/logo/logo.png
+    - assets/logo/gokhana_logo.png
+    - assets/icons/company_credit/
 
   fonts:
+    - family: Open Sans
+      fonts:
+        - asset: assets/fonts/Open Sans/OpenSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Open Sans/OpenSans-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Open Sans/OpenSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Open Sans/OpenSans-SemiBold.ttf
+          weight: 600
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto/Roboto-MediumItalic.ttf
+          style: italic
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Roboto/Roboto-Black.ttf
+          weight: 900
     - family: Gotham
       fonts:
         - asset: assets/fonts/Gotham-Light.otf

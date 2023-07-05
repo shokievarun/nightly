@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:nightly/utils/common_widgets/show_country_code.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_styles.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
@@ -90,7 +89,7 @@ class CustomTextField extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        showCountryCodePicker(context);
+                        //showCountryCodePicker(context);
                       },
                       child: Container(
                         height: 16,

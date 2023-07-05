@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/views/shop_list_screen.dart';
+import 'package:nightly/features/restaurant/restaurant_list_screen.dart';
 
 class HomeController extends GetxController {
   final MainController _mainController = Get.find();
@@ -9,11 +9,11 @@ class HomeController extends GetxController {
     await _mainController.setLocationPermissionEnabled();
   }
 
-  navigateToShopListScreen() async {
+  navigateToRestaurantListScreen() async {
     // await checkLocationPermissions();
     // if (_mainController.isServiceLocationEnabled.value &&
     //     _mainController.isLocationEnabled.value) {
-    Get.to(() => ShopListScreen());
+    Get.to(() => RestaurantListScreen());
     // } else {
     //   _mainController.snackBar("Alert!", "Kindly turn on your location");
     // }

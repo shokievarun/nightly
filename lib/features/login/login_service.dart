@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
+import 'package:nightly/features/login/user_model.dart';
+import 'package:nightly/utils/constants/api_endpoints.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 class LoginService {
@@ -14,7 +16,7 @@ class LoginService {
 
   LoginService._internal() {
     // Initialize Dio instance with base URL or any other configurations
-    _dio.options.baseUrl = 'https://your-api-url.com';
+    _dio.options.baseUrl = ApiEndpoints.url;
   }
 
   Future<bool> checkUserExists(String number) async {
@@ -54,22 +56,32 @@ class LoginService {
     }
   }
 
-  Future<String?> verifyOTP(String number, int otp) async {
+  Future<UserModel?> verifyOTP(String number, int otp) async {
     try {
       final response = await _dio.post('/verify-otp', data: {
         'number': number,
-        'otp': otp,
+        'otp': otp.toString(),
       });
       if (response.statusCode == 200) {
+        var jsonData = response.data;
+        UserModel userModel = UserModel(
+          accessToken: jsonData['accessToken'],
+          id: jsonData['user']['_id'],
+          name: jsonData['user']['name'],
+          email: jsonData['user']['email'],
+          number: jsonData['user']['number'],
+        );
         _mainController.saveUserFromJson(response.data);
+        return userModel;
       } else {
         _mainController.deleteUser();
+        return null;
       }
     } catch (error) {
       _mainController.deleteUser();
       Logger.error('Error verifying OTP: $error');
+      return null;
     }
-    return null;
   }
 }
 

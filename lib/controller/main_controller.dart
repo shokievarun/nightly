@@ -4,14 +4,21 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:nightly/features/login/user_model.dart';
-import 'package:nightly/model/latlng.dart';
+import 'package:nightly/features/restaurant/models.dart';
+import 'package:nightly/features/restaurant/models.dart';
+
+import 'package:nightly/features/restaurant/latlng.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:location/location.dart' as loc;
 import 'package:nightly/utils/constants/color_constants.dart';
+import 'package:nightly/utils/constants/hive_boxes.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainController extends GetxController {
+  final Box orderBox = Hive.box('order');
+  RxMap cartMap = {}.obs;
+  RxBool rebuildPaymentSheet = false.obs;
   LatLng currentLatLng = LatLng(13.027966, 77.540916);
   RxString currentLocation = "Dubai".obs;
   RxDouble latitude = 13.027966.obs;
@@ -25,6 +32,165 @@ class MainController extends GetxController {
   loc.PermissionStatus? _permissionGranted;
   loc.Location location = loc.Location();
 
+  bool isIdAlreadyAdded(dynamic menuItems, String targetId) {
+    for (var menuItem in menuItems) {
+      if (menuItem.id == targetId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  onAdd(Menuitem menuitem, String restaurantId, String restaurantName,
+      String restaurantImageUrl) {
+    List<Menuitem> existingItems = cartMap.containsKey(restaurantId)
+        ? cartMap[restaurantId]!.menuItems
+        : [];
+    String itemId = menuitem.id!;
+
+    if (existingItems.isNotEmpty) {
+      int existingIndex = existingItems.indexWhere((item) => item.id == itemId);
+      if (existingIndex != -1) {
+        // Increase count if ID is already present
+        Menuitem menuItem = existingItems[existingIndex];
+        int newCount = menuItem.count! + 1;
+        existingItems[existingIndex] = menuItem.copyWith(count: newCount);
+      } else {
+        // Add new Menuitem with count 1 if ID is not present
+        Menuitem menuItem = menuitem.copyWith(count: 1);
+        existingItems.add(menuItem);
+      }
+    } else {
+      // Add new Menuitem with count 1 if list is empty
+      Menuitem menuItem = menuitem.copyWith(count: 1);
+      existingItems.add(menuItem);
+    }
+
+    cartMap[restaurantId] = CartRestaurant(
+        id: restaurantId,
+        name: restaurantName,
+        image: restaurantImageUrl,
+        menuItems: existingItems,
+        lastOpenedDateTime: DateTime.now());
+    cartMap.refresh();
+  }
+
+  onRemove(Menuitem menuitem, String restaurantId, String restaurantName,
+      String restaurantImageUrl) {
+    List<Menuitem> existingItems = cartMap.containsKey(restaurantId)
+        ? cartMap[restaurantId].menuItems
+        : [];
+    String itemId = menuitem.id!;
+
+    if (existingItems.isNotEmpty) {
+      int existingIndex = existingItems.indexWhere((item) => item.id == itemId);
+      if (existingIndex != -1) {
+        // Decrease count or remove item if count becomes zero
+        Menuitem menuItem = existingItems[existingIndex];
+        int newCount = menuItem.count! - 1;
+        if (newCount > 0) {
+          existingItems[existingIndex] = menuItem.copyWith(count: newCount);
+        } else {
+          existingItems.removeAt(existingIndex);
+        }
+      }
+    }
+
+    cartMap[restaurantId] = CartRestaurant(
+        id: restaurantId,
+        name: restaurantName,
+        image: restaurantImageUrl,
+        menuItems: existingItems,
+        lastOpenedDateTime: DateTime.now());
+    cartMap.refresh();
+  }
+
+  // List<dynamic> sortedCartRestaurants = [];
+  // int limitLength() {
+  //   sortedCartRestaurants = cartMap.values.toList();
+  //   // sortedCartRestaurants.sort((b, a) {
+  //   //   DateTime? dateTimeA = a.lastOpenedDateTime;
+  //   //   DateTime? dateTimeB = b.lastOpenedDateTime;
+  //   //   if (dateTimeA != null && dateTimeB != null) {
+  //   //     return dateTimeA.compareTo(dateTimeB);
+  //   //   } else if (dateTimeA != null) {
+  //   //     return -1;
+  //   //   } else if (dateTimeB != null) {
+  //   //     return 1;
+  //   //   }
+  //   //   return 0;
+  //   // });
+  //   return cartMap.values.length > 4 ? 4 : cartMap.values.length;
+  //   //  return cartMap.values.length;
+  // }
+
+  List<dynamic> getLatestRestaurant() {
+    List<dynamic> sortedCartRestaurants = cartMap.values.toList();
+    sortedCartRestaurants.sort((a, b) {
+      DateTime? dateTimeA = a.lastOpenedDateTime;
+      DateTime? dateTimeB = b.lastOpenedDateTime;
+      if (dateTimeA != null && dateTimeB != null) {
+        return dateTimeB.compareTo(dateTimeA); // Sorting in descending order
+      } else if (dateTimeA != null) {
+        return -1;
+      } else if (dateTimeB != null) {
+        return 1;
+      }
+      return 0;
+    });
+    sortedCartRestaurants
+        .removeWhere((restaurant) => restaurant.menuItems.isEmpty);
+
+    if (sortedCartRestaurants.length > 4) {
+      sortedCartRestaurants =
+          sortedCartRestaurants.sublist(0, 4); // Get the last four items
+    }
+
+//print(sortedCartRestaurants.length);
+    return sortedCartRestaurants;
+  }
+
+  int getMenuItemCount(Menuitem menuItem, String restaurantId) {
+    // String restaurantId =
+    //     menuItem.parentId!; // Replace this with the actual restaurantId
+    List<Menuitem> existingItems = cartMap.containsKey(restaurantId)
+        ? cartMap[restaurantId].menuItems
+        : [];
+
+    if (existingItems.isNotEmpty) {
+      int existingIndex =
+          existingItems.indexWhere((item) => item.id == menuItem.id);
+      if (existingIndex != -1) {
+        // Menu item is available, return its count
+        return existingItems[existingIndex].count!;
+      }
+    }
+
+    // Menu item is not available, return 0
+    return 0;
+  }
+
+  int getCartCount(String id) {
+    int count = 0;
+    List<Menuitem> menuItems =
+        cartMap.containsKey(id) ? cartMap[id].menuItems : [];
+    for (var menuItem in menuItems) {
+      count += menuItem.count!;
+    }
+    return count;
+  }
+
+  checkifCartHasZeroItemCount() {
+    int count = 0;
+    List<dynamic> cartRestaurants = cartMap.values.toList();
+    if (cartRestaurants.isNotEmpty) {
+      for (var cartRestaurant in cartRestaurants) {
+        count += getCartCount(cartRestaurant.id);
+      }
+    }
+    return count;
+  }
+
   setServiceLocationEnabled() async {
     isServiceLocationEnabled.value = await location.serviceEnabled();
 
@@ -35,7 +201,7 @@ class MainController extends GetxController {
 
   UserModel? userModel;
 
-  final userBox = Hive.box<UserModel>('users');
+  final userBox = Hive.box<UserModel>(HiveBoxes.users);
 
   void saveUserFromJson(dynamic jsonData) {
 //  final jsonData = json.decode(jsonStr);
@@ -52,6 +218,24 @@ class MainController extends GetxController {
 
   UserModel? getUser() {
     return userBox.get('user');
+  }
+
+  getPendingOrder() async {
+    cartMap.value = await orderBox.get('orderPending') ?? {};
+    // ignore: invalid_use_of_protected_member
+    Logger.info("cart value while getting ${cartMap.value.toString()}");
+  }
+
+  savependingOrder() async {
+    // ignore: invalid_use_of_protected_member
+    if (cartMap.values.toList().isNotEmpty) {
+      await orderBox.put('orderPending', cartMap.value);
+      Logger.info("cart value while ${await orderBox.get('orderPending')}");
+    } else {
+      await orderBox.put('orderPending', {});
+    }
+
+    Logger.info("cart value while saving ${cartMap.value.toString()}");
   }
 
   void deleteUser() {
@@ -255,7 +439,7 @@ class MainController extends GetxController {
     //       mapType: MapType.google,
     //       destination: Coords(13.0399748, 77.51834839999992),
     //       origin: Coords(
-    //           _mainController.latitude.value, _mainController.longitude.value),
+    //           latitude.value, longitude.value),
     //       originTitle: "Your Location",
     //       destinationTitle: "nightly",
     //       directionsMode: DirectionsMode.driving);

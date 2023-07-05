@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/home_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
-import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // Get.put(ShopListController());
+    // Get.put(RestaurantListController());
     _homeController.checkLocationPermissions();
     super.initState();
   }
@@ -27,15 +26,15 @@ class _HomeState extends State<Home> {
       body: Center(
         child: Container(
           color: ColorConstants.appBackgroundTheme,
-          width: 30.w,
-          height: 6.h,
+          width: 100,
+          height: 60,
           alignment: Alignment.center,
           child: GestureDetector(
             onTap: () {
-              _homeController.navigateToShopListScreen();
+              _homeController.navigateToRestaurantListScreen();
             },
             child: const Text(
-              "ShopsList",
+              "RestaurantsList",
               style: TextStyle(color: ColorConstants.appTheme),
             ),
           ),

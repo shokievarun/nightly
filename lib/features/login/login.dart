@@ -33,6 +33,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
 
   @override
+  void initState() {
+    controller.enablePhoneField.value = true;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(
       () => LoadingWrapper(
@@ -253,7 +259,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? AppStrings.kSignIn
                           : AppStrings.kSignUp
                       : AppStrings.kGetOtp,
-                  onPressed: () {
+                  onPressed: () async {
                     if (controller.otpSent.value) {
                       if (controller.otpSent.value &&
                           controller.otpVerified.isFalse) {
@@ -265,6 +271,12 @@ class _LoginPageState extends State<LoginPage> {
                             controller.isPrivacyPolicyAccepted.value);
                       }
                     } else {
+                      if (!controller.isCustomerExist.value) {
+                        await controller.registerUser(
+                            _nameController.text.trim(),
+                            _emailController.text.trim(),
+                            _phoneController.text.trim());
+                      }
                       controller.sendOtp(_phoneController.text.trim(),
                           _emailController.text.trim());
                     }
