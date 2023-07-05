@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nightly/features/menu/counter_button.dart';
 import 'package:nightly/features/menu/custom_item_description.dart';

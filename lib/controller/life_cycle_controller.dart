@@ -1,30 +1,28 @@
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/features/restaurant/models.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 class LifeCycleController extends FullLifeCycleController
     with FullLifeCycleMixin {
-  MainController _mainController = Get.find();
+  final MainController _mainController = Get.find();
   // Mandatory
   @override
   void onDetached() {
-    _mainController.savependingOrder();
+    _mainController.savePendingOrder();
     Logger.info('LifeCycleController - onDetached called');
   }
 
   // Mandatory
   @override
   void onInactive() {
-    _mainController.savependingOrder();
+    _mainController.savePendingOrder();
     Logger.info('LifeCycleController - onInative called');
   }
 
   // Mandatory
   @override
   void onPaused() {
-    _mainController.savependingOrder();
+    _mainController.savePendingOrder();
     Logger.info('LifeCycleController - onPaused called');
   }
 

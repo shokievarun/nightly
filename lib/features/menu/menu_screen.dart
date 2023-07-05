@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/features/cart/cart_screen.dart';
 import 'package:nightly/features/menu/menu_card.dart';
-import 'package:nightly/features/restaurant/models.dart';
 import 'package:nightly/features/restaurant/restaurant.dart';
 import 'package:nightly/utils/common_widgets/rounded_button.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
@@ -61,7 +60,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                   child: Text(
                                       "${_mainController.getCartCount(widget.restaurant.id!)} Items Added"),
                                 ),
-                                Icon(Icons.arrow_drop_up)
+                                const Icon(Icons.arrow_drop_up)
                               ],
                             ),
                             RoundedButton(

@@ -5,8 +5,6 @@ import 'package:hive/hive.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:nightly/features/login/user_model.dart';
 import 'package:nightly/features/restaurant/models.dart';
-import 'package:nightly/features/restaurant/models.dart';
-
 import 'package:nightly/features/restaurant/latlng.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:location/location.dart' as loc;
@@ -226,16 +224,16 @@ class MainController extends GetxController {
     Logger.info("cart value while getting ${cartMap.value.toString()}");
   }
 
-  savependingOrder() async {
+  savePendingOrder() async {
     // ignore: invalid_use_of_protected_member
     if (cartMap.values.toList().isNotEmpty) {
-      await orderBox.put('orderPending', cartMap.value);
+      await orderBox.put('orderPending', cartMap);
       Logger.info("cart value while ${await orderBox.get('orderPending')}");
     } else {
       await orderBox.put('orderPending', {});
     }
 
-    Logger.info("cart value while saving ${cartMap.value.toString()}");
+    Logger.info("cart value while saving ${cartMap.toString()}");
   }
 
   void deleteUser() {

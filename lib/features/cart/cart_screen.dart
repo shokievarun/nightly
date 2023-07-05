@@ -3,15 +3,16 @@ import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/features/restaurant/models.dart';
 
+// ignore: must_be_immutable
 class CartScreen extends StatefulWidget {
   CartRestaurant cartRestaurant;
-  CartScreen(this.cartRestaurant);
+  CartScreen(this.cartRestaurant, {Key? key}) : super(key: key);
   @override
   _CartScreenState createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  MainController _mainController = Get.find();
+  final MainController _mainController = Get.find();
   void increaseQuantity(item) {
     _mainController.onAdd(item, widget.cartRestaurant.id,
         widget.cartRestaurant.name, widget.cartRestaurant.image);
@@ -28,10 +29,10 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
+        title: const Text('Cart'),
       ),
       body: widget.cartRestaurant.menuItems.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('No items in the cart.'),
             )
           : ListView.builder(
@@ -46,12 +47,12 @@ class _CartScreenState extends State<CartScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.remove),
+                        icon: const Icon(Icons.remove),
                         onPressed: () => decreaseQuantity(
                             widget.cartRestaurant.menuItems[index]),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: () => increaseQuantity(
                             widget.cartRestaurant.menuItems[index]),
                       ),

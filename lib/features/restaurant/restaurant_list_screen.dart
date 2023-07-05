@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/features/cart/cart_screen.dart';
-import 'package:nightly/features/restaurant/models.dart';
 import 'package:nightly/features/restaurant/restaurant_list_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
@@ -103,10 +102,10 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                               width: 2,
                             ),
                           ),
-                          padding: EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(top: 10),
                           child: Row(
                             children: [
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
@@ -145,11 +144,13 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                         width: 2,
                                                       ),
                                                     ),
-                                                    padding: EdgeInsets.only(
-                                                        top: 10),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 10),
                                                     child: Row(
                                                       children: [
-                                                        SizedBox(width: 10),
+                                                        const SizedBox(
+                                                            width: 10),
                                                         Expanded(
                                                           child: Column(
                                                             mainAxisAlignment:
@@ -161,9 +162,10 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                                     .getLatestRestaurant()[
                                                                         i]
                                                                     .name,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16),
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            16),
                                                               ),
                                                               Text(
                                                                 _mainController
@@ -172,9 +174,10 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                                             .getLatestRestaurant()[i]
                                                                             .id)
                                                                     .toString(),
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16),
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            16),
                                                               ),
                                                             ],
                                                           ),
@@ -200,8 +203,8 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                             // showModalBottomSheet(context: context, builder: ())
                                                             // View cart button action
                                                           },
-                                                          child:
-                                                              Text('View Cart'),
+                                                          child: const Text(
+                                                              'View Cart'),
                                                         ),
                                                       ],
                                                     ),
@@ -217,7 +220,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                         _mainController
                                             .getLatestRestaurant()[i]
                                             .name,
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                       ),
                                       Text(
                                         _mainController
@@ -225,7 +228,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                 .getLatestRestaurant()[i]
                                                 .id)
                                             .toString(),
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -339,7 +342,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                   // showModalBottomSheet(context: context, builder: ())
                                   // View cart button action
                                 },
-                                child: Text('View Cart'),
+                                child: const Text('View Cart'),
                               ),
                             ],
                           ),
