@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/life_cycle_controller.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
@@ -25,7 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
     _mainController.getPendingOrder();
     _mainController.getLastSelectedPaymentType();
     Timer(const Duration(milliseconds: 1000), () {
-      Get.offAll(() => RestaurantListScreen());
+      //  Get.offAll(() => RestaurantListScreen());
+      context.go('/restaurant');
     });
   }
 

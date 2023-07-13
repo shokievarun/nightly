@@ -234,7 +234,8 @@ class _LoginPageState extends State<LoginPage> {
                                   otpval,
                                   _nameController.text.trim(),
                                   _emailController.text.trim(),
-                                  controller.isPrivacyPolicyAccepted.value);
+                                  controller.isPrivacyPolicyAccepted.value,
+                                  context);
                             })
                         // : const SizedBox(),
                       ],
@@ -268,7 +269,8 @@ class _LoginPageState extends State<LoginPage> {
                             controller.otpController.text,
                             _nameController.text.trim(),
                             _emailController.text.trim(),
-                            controller.isPrivacyPolicyAccepted.value);
+                            controller.isPrivacyPolicyAccepted.value,
+                            context);
                       }
                     } else {
                       if (!controller.isCustomerExist.value) {

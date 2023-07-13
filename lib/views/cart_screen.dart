@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/repositries/order_service.dart';
 import 'package:nightly/views/payment_screen.dart';
@@ -10,9 +11,11 @@ import 'package:nightly/utils/constants/dimensions.dart';
 
 // ignore: must_be_immutable
 class CartScreen extends StatefulWidget {
-  OrderModel orderModel;
-  bool isFromHome;
-  CartScreen(this.orderModel, this.isFromHome, {Key? key}) : super(key: key);
+  late OrderModel orderModel;
+  CartScreen(
+      {Key? key, required bool isFromHome, required OrderModel orderModel})
+      : super(key: key);
+  //  {Key? key}) : super(key: key);
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -51,7 +54,8 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void openPaymentSheet() async {
-    Get.to(() => PaymentSelectionScreen());
+    context.go('/selectpayment');
+    // Get.to(() => PaymentSelectionScreen());
     // String? result = await Get.to<String>(PaymentSelectionScreen());
     // if (result != null) {
     //   setState(() {
@@ -159,12 +163,12 @@ class _CartScreenState extends State<CartScreen> {
                                       .remove(orderModel.restaurantId);
                                   _mainController.cartMap.refresh();
                                 }
-                                if (widget.isFromHome) {
-                                  Get.back();
-                                } else {
-                                  Get.back();
-                                  Get.back();
-                                }
+                                //  if (widget.isFromHome) {
+                                Navigator.of(context).pop();
+                                // } else {
+                                //   Navigator.of(context).pop();
+                                //   Navigator.of(context).pop();
+                                // }
 
                                 showCustomStatusSnackBar(
                                     text: "Order Placed",

@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nightly/models/user_model.dart';
 import 'package:nightly/models/models.dart';
 import 'package:nightly/utils/constants/hive_boxes.dart';
+import 'package:nightly/views/routes.dart';
 import 'package:nightly/views/splashscreen.dart';
 
 Future<void> main() async {
@@ -23,10 +24,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp.router(
       useInheritedMediaQuery: true,
-      home: const SplashScreen(),
+      // home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
+      routerConfig: router,
       builder: (BuildContext context, child) {
         final MediaQueryData data = MediaQuery.of(context);
         return MediaQuery(

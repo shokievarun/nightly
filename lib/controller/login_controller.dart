@@ -196,7 +196,7 @@ class LoginController extends GetxController {
 
   ///function to verfy otp
   void verifyOtp(String phoneNumber, String otp, String name, String email,
-      bool isPrivacyPolicyAccepted) async {
+      bool isPrivacyPolicyAccepted, BuildContext context) async {
     try {
       if (isPhoneValid.value && isCustomerExist.value
           ? true
@@ -221,7 +221,8 @@ class LoginController extends GetxController {
           resetValues();
           isLoading.value = false;
           otpController.clear();
-          Get.back();
+          Navigator.of(context).pop();
+          //Get.back();
           //   Get.to(() => const Home());
           if (!isCustomerExist.value) {
           } else {}

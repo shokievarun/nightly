@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/views/cart_screen.dart';
 import 'package:nightly/controller/restaurant_list_controller.dart';
@@ -185,14 +186,23 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                         ),
                                                         ElevatedButton(
                                                           onPressed: () {
-                                                            Get.to(() => CartScreen(
-                                                                _mainController
-                                                                        .cartMap[
-                                                                    _mainController
-                                                                        .getLatestRestaurant()[
-                                                                            i]
-                                                                        .id]!,
-                                                                true));
+                                                            // Get.to(() => CartScreen(
+                                                            //     _mainController
+                                                            //             .cartMap[
+                                                            //         _mainController
+                                                            //             .getLatestRestaurant()[
+                                                            //                 i]
+                                                            //             .id]!,
+                                                            //     true));
+                                                            context.goNamed(
+                                                              "/cart",
+                                                              extra: _mainController
+                                                                      .cartMap[
+                                                                  _mainController
+                                                                      .getLatestRestaurant()[
+                                                                          i]
+                                                                      .id]!,
+                                                            );
                                                             // Get.bottomSheet(
                                                             //   Container(
                                                             //     height: Dimensions
@@ -238,12 +248,12 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  Get.to(
-                                    () => CartScreen(
-                                        _mainController.cartMap[_mainController
+                                  context.goNamed(
+                                    "/cart",
+                                    extra: _mainController.cartMap[
+                                        _mainController
                                             .getLatestRestaurant()[i]
-                                            .restaurantId]!,
-                                        true),
+                                            .id]!,
                                   );
                                   // Get.bottomSheet(
                                   //   Container(

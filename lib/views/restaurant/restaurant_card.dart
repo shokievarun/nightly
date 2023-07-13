@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/views/login.dart';
 import 'package:nightly/views/menu/menu_screen.dart';
@@ -31,11 +32,9 @@ class _RestaurantCardState extends State<RestaurantCard> {
     return InkWell(
       onTap: () {
         if (_mainController.userModel == null) {
-          Get.to(const LoginPage());
+          context.go('/login');
         } else {
-          Get.to(() => MenuScreen(
-                restaurant: widget.restaurant,
-              ));
+          context.goNamed("/menu", extra: widget.restaurant);
         }
       },
       child: Card(
