@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nightly/features/menu/food_type.dart';
+import 'package:nightly/views/menu/food_type.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_styles.dart';
 import 'package:nightly/utils/constants/dimensions.dart';

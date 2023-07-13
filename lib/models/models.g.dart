@@ -104,39 +104,51 @@ class MenuitemAdapter extends TypeAdapter<Menuitem> {
           typeId == other.typeId;
 }
 
-class CartRestaurantAdapter extends TypeAdapter<CartRestaurant> {
+class OrderModelAdapter extends TypeAdapter<OrderModel> {
   @override
   final int typeId = 4;
 
   @override
-  CartRestaurant read(BinaryReader reader) {
+  OrderModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CartRestaurant(
-      id: fields[0] as String,
-      name: fields[1] as String,
-      image: fields[2] as String,
-      menuItems: (fields[3] as List).cast<Menuitem>(),
-      lastOpenedDateTime: fields[4] as DateTime?,
+    return OrderModel(
+      userId: fields[0] as String,
+      orderStatus: fields[1] as String,
+      restaurantId: fields[2] as String,
+      name: fields[3] as String,
+      image: fields[4] as String,
+      menuItems: (fields[5] as List).cast<Menuitem>(),
+      lastOpenedDateTime: fields[6] as DateTime,
+      paymentType: fields[7] as String,
+      totalAmount: fields[8] as num,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CartRestaurant obj) {
+  void write(BinaryWriter writer, OrderModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(9)
       ..writeByte(0)
-      ..write(obj.id)
+      ..write(obj.userId)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.orderStatus)
       ..writeByte(2)
-      ..write(obj.image)
+      ..write(obj.restaurantId)
       ..writeByte(3)
-      ..write(obj.menuItems)
+      ..write(obj.name)
       ..writeByte(4)
-      ..write(obj.lastOpenedDateTime);
+      ..write(obj.image)
+      ..writeByte(5)
+      ..write(obj.menuItems)
+      ..writeByte(6)
+      ..write(obj.lastOpenedDateTime)
+      ..writeByte(7)
+      ..write(obj.paymentType)
+      ..writeByte(8)
+      ..write(obj.totalAmount);
   }
 
   @override
@@ -145,7 +157,7 @@ class CartRestaurantAdapter extends TypeAdapter<CartRestaurant> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CartRestaurantAdapter &&
+      other is OrderModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

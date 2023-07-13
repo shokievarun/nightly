@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/features/login/user_model.dart';
+import 'package:nightly/models/user_model.dart';
 import 'package:nightly/utils/constants/api_endpoints.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 

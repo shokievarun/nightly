@@ -1,4 +1,4 @@
-import 'package:nightly/features/restaurant/latlng.dart';
+import 'package:nightly/models/latlng.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 import 'models.dart';

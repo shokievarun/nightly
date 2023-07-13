@@ -6,7 +6,7 @@ import 'package:nightly/controller/life_cycle_controller.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
-import 'package:nightly/features/restaurant/restaurant_list_screen.dart';
+import 'package:nightly/views/restaurant/restaurant_list_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Get.put(LifeCycleController());
     _mainController.userModel = _mainController.getUser();
     _mainController.getPendingOrder();
+    _mainController.getLastSelectedPaymentType();
     Timer(const Duration(milliseconds: 1000), () {
       Get.offAll(() => RestaurantListScreen());
     });

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/features/menu/item_card.dart';
-import 'package:nightly/features/restaurant/models.dart';
+import 'package:nightly/views/menu/item_card.dart';
+import 'package:nightly/models/models.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_styles.dart';
 import 'package:nightly/utils/constants/dimensions.dart';

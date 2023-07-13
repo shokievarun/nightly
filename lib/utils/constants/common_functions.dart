@@ -28,21 +28,21 @@ showCustomStatusSnackBar({
         Dimensions.width20, 0, Dimensions.width20, Dimensions.height40),
     messageText: Row(
       children: [
-        SizedBox(
-          height: Dimensions.height30,
-          width: Dimensions.width31 - 1,
-          child: CircleAvatar(
-            backgroundColor: iconBackgroundColor,
-            child: SizedBox(
-              width: iconWidth,
-              height: iconHeight,
-              child: Image.asset(
-                iconPath,
-                scale: scale,
-              ),
-            ),
-          ),
-        ),
+        // SizedBox(
+        //   height: Dimensions.height30,
+        //   width: Dimensions.width31 - 1,
+        //   child: CircleAvatar(
+        //     backgroundColor: iconBackgroundColor,
+        //     child: SizedBox(
+        //       width: iconWidth,
+        //       height: iconHeight,
+        //       child: Image.asset(
+        //         iconPath,
+        //         scale: scale,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         SizedBox(width: Dimensions.width20),
         Flexible(
           child: Text(

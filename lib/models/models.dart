@@ -145,73 +145,99 @@ class Menuitem extends HiveObject {
 
 @JsonSerializable()
 @HiveType(typeId: 4)
-class CartRestaurant extends HiveObject {
+class OrderModel extends HiveObject {
   @HiveField(0)
-  final String id;
+  final String userId;
 
   @HiveField(1)
-  final String name;
+  final String orderStatus;
 
   @HiveField(2)
-  final String image;
+  final String restaurantId;
 
   @HiveField(3)
-  final List<Menuitem> menuItems;
+  final String name;
 
   @HiveField(4)
-  DateTime? lastOpenedDateTime;
+  final String image;
 
-  CartRestaurant({
-    required this.id,
+  @HiveField(5)
+  final List<Menuitem> menuItems;
+
+  @HiveField(6)
+  final DateTime lastOpenedDateTime;
+
+  @HiveField(7)
+  final String paymentType;
+
+  @HiveField(8)
+  final num totalAmount;
+
+  OrderModel({
+    required this.userId,
+    required this.orderStatus,
+    required this.restaurantId,
     required this.name,
     required this.image,
     required this.menuItems,
-    this.lastOpenedDateTime,
+    required this.lastOpenedDateTime,
+    required this.paymentType,
+    required this.totalAmount,
   });
 
-  CartRestaurant copyWith({
-    String? id,
+  OrderModel copyWith({
+    String? userId,
+    String? orderStatus,
+    String? restaurantId,
     String? name,
     String? image,
     List<Menuitem>? menuItems,
     DateTime? lastOpenedDateTime,
+    String? paymentType,
+    num? totalAmount,
   }) {
-    return CartRestaurant(
-      id: id ?? this.id,
+    return OrderModel(
+      userId: userId ?? this.userId,
+      orderStatus: orderStatus ?? this.orderStatus,
+      restaurantId: restaurantId ?? this.restaurantId,
       name: name ?? this.name,
       image: image ?? this.image,
       menuItems: menuItems ?? this.menuItems,
       lastOpenedDateTime: lastOpenedDateTime ?? this.lastOpenedDateTime,
+      paymentType: paymentType ?? this.paymentType,
+      totalAmount: totalAmount ?? this.totalAmount,
     );
   }
 
-  factory CartRestaurant.fromJson(Map<String, dynamic> json) {
-    return CartRestaurant(
-      id: json['id'],
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      userId: json['userId'],
+      orderStatus: json['orderStatus'],
+      restaurantId: json['restaurantId'],
       name: json['name'],
       image: json['image'],
-      menuItems: List<Menuitem>.from(json['menuItems']),
-      lastOpenedDateTime: json['lastOpenedDateTime'] != null
-          ? DateTime.parse(json['lastOpenedDateTime'])
-          : null,
+      menuItems: List<Menuitem>.from(
+          json['menuItems'].map((x) => Menuitem.fromJson(x))),
+      lastOpenedDateTime: DateTime.parse(json['lastOpenedDateTime']),
+      paymentType: json['paymentType'],
+      totalAmount: json['totalAmount'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'userId': userId,
+      'orderStatus': orderStatus,
+      'restaurantId': restaurantId,
       'name': name,
       'image': image,
-      'menuItems': menuItems,
-      'lastOpenedDateTime': lastOpenedDateTime?.toIso8601String(),
+      'menuItems': menuItems.map((x) => x.toJson()).toList(),
+      'lastOpenedDateTime': lastOpenedDateTime.toIso8601String(),
+      'paymentType': paymentType,
+      'totalAmount': totalAmount,
     };
   }
-  // factory CartRestaurant.fromJson(Map<String, dynamic> json) =>
-  //     _$CartRestaurantFromJson(json);
-
-  // Map<String, dynamic> toJson() => _$CartRestaurantToJson(this);
 }
-
 
 // class Category {
 //   final String? parentId;
@@ -319,14 +345,14 @@ class CartRestaurant extends HiveObject {
 //   }
 // }
 
-// class CartRestaurant {
+// class OrderModel {
 //   final String id;
 //   final String name;
 //   final String image;
 //   final List<Menuitem> menuItems;
 //   DateTime? lastOpenedDateTime;
 
-//   CartRestaurant({
+//   OrderModel({
 //     required this.id,
 //     required this.name,
 //     required this.image,
@@ -334,14 +360,14 @@ class CartRestaurant extends HiveObject {
 //     this.lastOpenedDateTime,
 //   });
 
-//   CartRestaurant copyWith({
+//   OrderModel copyWith({
 //     String? id,
 //     String? name,
 //     String? image,
 //     List<Menuitem>? menuItems,
 //     DateTime? lastOpenedDateTime,
 //   }) {
-//     return CartRestaurant(
+//     return OrderModel(
 //       id: id ?? this.id,
 //       name: name ?? this.name,
 //       image: image ?? this.image,
@@ -350,8 +376,8 @@ class CartRestaurant extends HiveObject {
 //     );
 //   }
 
-//   factory CartRestaurant.fromJson(Map<String, dynamic> json) {
-//     return CartRestaurant(
+//   factory OrderModel.fromJson(Map<String, dynamic> json) {
+//     return OrderModel(
 //       id: json['id'],
 //       name: json['name'],
 //       image: json['image'],

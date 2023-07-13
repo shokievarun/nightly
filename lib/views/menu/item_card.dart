@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nightly/features/menu/counter_button.dart';
-import 'package:nightly/features/menu/custom_item_description.dart';
-import 'package:nightly/features/menu/food_type.dart';
+import 'package:nightly/views/menu/counter_button.dart';
+import 'package:nightly/views/menu/custom_item_description.dart';
+import 'package:nightly/views/menu/food_type.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_styles.dart';
 import 'package:nightly/utils/constants/dimensions.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nightly/features/login/login_controller.dart';
-import 'package:nightly/utils/common_widgets/custom_button.dart';
-import 'package:nightly/utils/common_widgets/custom_otp.dart';
-import 'package:nightly/utils/common_widgets/custom_text_field.dart';
-import 'package:nightly/utils/common_widgets/loader.dart';
-import 'package:nightly/utils/common_widgets/tag_widget.dart';
+import 'package:nightly/controller/login_controller.dart';
+import 'package:nightly/views/common_widgets/custom_button.dart';
+import 'package:nightly/views/common_widgets/custom_otp.dart';
+import 'package:nightly/views/common_widgets/custom_text_field.dart';
+import 'package:nightly/views/common_widgets/loader.dart';
+import 'package:nightly/views/common_widgets/tag_widget.dart';
 import 'package:nightly/utils/constants/app_assets.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_strings.dart';
@@ -13,7 +13,7 @@ import 'package:nightly/utils/constants/dimensions.dart';
 import 'package:nightly/utils/constants/keys.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
-import '../../utils/constants/app_styles.dart';
+import '../utils/constants/app_styles.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

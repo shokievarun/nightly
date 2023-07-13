@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:nightly/features/login/user_model.dart';
-import 'package:nightly/features/restaurant/models.dart';
-import 'package:nightly/features/restaurant/latlng.dart';
+import 'package:nightly/models/user_model.dart';
+import 'package:nightly/models/models.dart';
+import 'package:nightly/models/latlng.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:location/location.dart' as loc;
 import 'package:nightly/utils/constants/color_constants.dart';
@@ -15,6 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MainController extends GetxController {
   final Box orderBox = Hive.box('order');
+  RxString paymenttype = "".obs;
   RxMap cartMap = {}.obs;
   RxBool rebuildPaymentSheet = false.obs;
   LatLng currentLatLng = LatLng(13.027966, 77.540916);
@@ -64,13 +65,18 @@ class MainController extends GetxController {
       existingItems.add(menuItem);
     }
 
-    cartMap[restaurantId] = CartRestaurant(
-        id: restaurantId,
+    cartMap[restaurantId] = OrderModel(
+        userId: "",
+        paymentType: "",
+        totalAmount: 0.0,
+        restaurantId: restaurantId,
         name: restaurantName,
+        orderStatus: "created",
         image: restaurantImageUrl,
         menuItems: existingItems,
         lastOpenedDateTime: DateTime.now());
     cartMap.refresh();
+    savePendingOrder();
   }
 
   onRemove(Menuitem menuitem, String restaurantId, String restaurantName,
@@ -94,19 +100,24 @@ class MainController extends GetxController {
       }
     }
 
-    cartMap[restaurantId] = CartRestaurant(
-        id: restaurantId,
+    cartMap[restaurantId] = OrderModel(
+        userId: "",
+        paymentType: "",
+        totalAmount: 0.0,
+        restaurantId: restaurantId,
         name: restaurantName,
         image: restaurantImageUrl,
         menuItems: existingItems,
-        lastOpenedDateTime: DateTime.now());
+        lastOpenedDateTime: DateTime.now(),
+        orderStatus: 'created');
     cartMap.refresh();
+    savePendingOrder();
   }
 
-  // List<dynamic> sortedCartRestaurants = [];
+  // List<dynamic> sortedOrderModels = [];
   // int limitLength() {
-  //   sortedCartRestaurants = cartMap.values.toList();
-  //   // sortedCartRestaurants.sort((b, a) {
+  //   sortedOrderModels = cartMap.values.toList();
+  //   // sortedOrderModels.sort((b, a) {
   //   //   DateTime? dateTimeA = a.lastOpenedDateTime;
   //   //   DateTime? dateTimeB = b.lastOpenedDateTime;
   //   //   if (dateTimeA != null && dateTimeB != null) {
@@ -123,8 +134,8 @@ class MainController extends GetxController {
   // }
 
   List<dynamic> getLatestRestaurant() {
-    List<dynamic> sortedCartRestaurants = cartMap.values.toList();
-    sortedCartRestaurants.sort((a, b) {
+    List<dynamic> sortedOrderModels = cartMap.values.toList();
+    sortedOrderModels.sort((a, b) {
       DateTime? dateTimeA = a.lastOpenedDateTime;
       DateTime? dateTimeB = b.lastOpenedDateTime;
       if (dateTimeA != null && dateTimeB != null) {
@@ -136,16 +147,15 @@ class MainController extends GetxController {
       }
       return 0;
     });
-    sortedCartRestaurants
-        .removeWhere((restaurant) => restaurant.menuItems.isEmpty);
+    sortedOrderModels.removeWhere((restaurant) => restaurant.menuItems.isEmpty);
 
-    if (sortedCartRestaurants.length > 4) {
-      sortedCartRestaurants =
-          sortedCartRestaurants.sublist(0, 4); // Get the last four items
+    if (sortedOrderModels.length > 4) {
+      sortedOrderModels =
+          sortedOrderModels.sublist(0, 4); // Get the last four items
     }
 
-//print(sortedCartRestaurants.length);
-    return sortedCartRestaurants;
+//print(sortedOrderModels.length);
+    return sortedOrderModels;
   }
 
   int getMenuItemCount(Menuitem menuItem, String restaurantId) {
@@ -180,10 +190,10 @@ class MainController extends GetxController {
 
   checkifCartHasZeroItemCount() {
     int count = 0;
-    List<dynamic> cartRestaurants = cartMap.values.toList();
-    if (cartRestaurants.isNotEmpty) {
-      for (var cartRestaurant in cartRestaurants) {
-        count += getCartCount(cartRestaurant.id);
+    List<dynamic> orderModels = cartMap.values.toList();
+    if (orderModels.isNotEmpty) {
+      for (var orderModel in orderModels) {
+        count += getCartCount(orderModel.restaurantId);
       }
     }
     return count;
@@ -234,6 +244,25 @@ class MainController extends GetxController {
     }
 
     Logger.info("cart value while saving ${cartMap.toString()}");
+  }
+
+  saveLastSelectedPaymentType(String type) async {
+    paymenttype.value = type;
+    await orderBox.put('paymenttype', type);
+  }
+
+  getLastSelectedPaymentType() {
+    paymenttype.value = orderBox.get('paymenttype') ?? "";
+  }
+
+  num getTotalAmountOfCart(String id) {
+    num totalAmount = 0;
+    OrderModel orderModel = cartMap[id];
+    for (var menuitem in orderModel.menuItems) {
+      totalAmount += (menuitem.price!) * (menuitem.count!);
+    }
+
+    return totalAmount;
   }
 
   void deleteUser() {

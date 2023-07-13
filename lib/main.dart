@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nightly/features/login/user_model.dart';
-import 'package:nightly/features/restaurant/models.dart';
+import 'package:nightly/models/user_model.dart';
+import 'package:nightly/models/models.dart';
 import 'package:nightly/utils/constants/hive_boxes.dart';
-import 'package:nightly/features/splash/splashscreen.dart';
+import 'package:nightly/views/splashscreen.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserModelAdapter());
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(MenuitemAdapter());
-  Hive.registerAdapter(CartRestaurantAdapter());
+  Hive.registerAdapter(OrderModelAdapter());
   await Hive.openBox<UserModel>(HiveBoxes.users);
   await Hive.openBox('order');
   runApp(const MyApp());

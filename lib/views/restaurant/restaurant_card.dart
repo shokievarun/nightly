@@ -5,9 +5,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/features/login/login.dart';
-import 'package:nightly/features/menu/menu_screen.dart';
-import 'package:nightly/features/restaurant/restaurant.dart';
+import 'package:nightly/views/login.dart';
+import 'package:nightly/views/menu/menu_screen.dart';
+import 'package:nightly/models/restaurant.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
 

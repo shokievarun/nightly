@@ -1,28 +1,26 @@
 import 'package:get/get.dart';
-import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 class LifeCycleController extends FullLifeCycleController
     with FullLifeCycleMixin {
-  final MainController _mainController = Get.find();
   // Mandatory
   @override
   void onDetached() {
-    _mainController.savePendingOrder();
+    // _mainController.savePendingOrder();
     Logger.info('LifeCycleController - onDetached called');
   }
 
   // Mandatory
   @override
   void onInactive() {
-    _mainController.savePendingOrder();
+    // _mainController.savePendingOrder();
     Logger.info('LifeCycleController - onInative called');
   }
 
   // Mandatory
   @override
   void onPaused() {
-    _mainController.savePendingOrder();
+    //  _mainController.savePendingOrder();
     Logger.info('LifeCycleController - onPaused called');
   }
 

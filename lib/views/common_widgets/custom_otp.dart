@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nightly/features/login/login_controller.dart';
+import 'package:nightly/controller/login_controller.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_strings.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
 import 'package:pinput/pinput.dart';
 
-import '../constants/app_styles.dart';
+import '../../utils/constants/app_styles.dart';
 // import 'package:pinput/pinput.dart';
 
 class CustomOtpField extends GetView<LoginController> {

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nightly/features/login/login_controller.dart';
-import 'package:nightly/utils/common_widgets/custom_search_field.dart';
+import 'package:nightly/controller/login_controller.dart';
+import 'package:nightly/views/common_widgets/custom_search_field.dart';
 import 'package:nightly/utils/constants/app_assets.dart';
 import 'package:nightly/utils/constants/app_styles.dart';
 import 'package:nightly/utils/constants/country_codes.dart';

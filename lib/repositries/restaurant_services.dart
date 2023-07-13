@@ -1,4 +1,4 @@
-import 'package:nightly/services/api_base_helper.dart';
+import 'package:nightly/repositries/api_base_helper.dart';
 import 'package:nightly/utils/constants/api_endpoints.dart';
 
 class RestaurantService {

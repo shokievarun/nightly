@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/features/cart/cart_screen.dart';
-import 'package:nightly/features/restaurant/restaurant_list_controller.dart';
+import 'package:nightly/views/cart_screen.dart';
+import 'package:nightly/controller/restaurant_list_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
-import 'package:nightly/views/common_widgets.dart/common_progress_indicator.dart';
-import 'package:nightly/views/common_widgets.dart/custom_refresh.dart';
-import 'package:nightly/features/restaurant/restaurant_card.dart';
+import 'package:nightly/views/common_widgets/common_progress_indicator.dart';
+import 'package:nightly/views/common_widgets/custom_refresh.dart';
+import 'package:nightly/views/restaurant/restaurant_card.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class RestaurantListScreen extends StatefulWidget {
@@ -84,8 +84,9 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                             _mainController.getLatestRestaurant().length - 1;
                         i >= 0;
                         i--)
-                      if (_mainController.getCartCount(
-                              _mainController.getLatestRestaurant()[i].id) >
+                      if (_mainController.getCartCount(_mainController
+                              .getLatestRestaurant()[i]
+                              .restaurantId) >
                           0)
                         Container(
                           //  height: Dimensions.screenHeight * 0.1,
@@ -190,7 +191,8 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                                     _mainController
                                                                         .getLatestRestaurant()[
                                                                             i]
-                                                                        .id]!));
+                                                                        .id]!,
+                                                                true));
                                                             // Get.bottomSheet(
                                                             //   Container(
                                                             //     height: Dimensions
@@ -226,7 +228,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                         _mainController
                                             .getCartCount(_mainController
                                                 .getLatestRestaurant()[i]
-                                                .id)
+                                                .restaurantId)
                                             .toString(),
                                         style: const TextStyle(fontSize: 16),
                                       ),
@@ -236,10 +238,13 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  Get.to(() => CartScreen(
-                                      _mainController.cartMap[_mainController
-                                          .getLatestRestaurant()[i]
-                                          .id]!));
+                                  Get.to(
+                                    () => CartScreen(
+                                        _mainController.cartMap[_mainController
+                                            .getLatestRestaurant()[i]
+                                            .restaurantId]!,
+                                        true),
+                                  );
                                   // Get.bottomSheet(
                                   //   Container(
                                   //       height: Dimensions.screenHeight,
