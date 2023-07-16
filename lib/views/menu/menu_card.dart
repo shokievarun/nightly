@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/views/menu/item_card.dart';
 import 'package:nightly/models/models.dart';
@@ -24,7 +23,7 @@ class MenuCard extends StatelessWidget {
   final String restaurantId;
   final String restaurantName;
   final String restaurantImageUrl;
-  final MainController _mainController = Get.find();
+  final MainController _mainController = MainController();
   @override
   Widget build(BuildContext context) {
     // Logger.info("subCategoryList $subCategoryList");
@@ -69,9 +68,9 @@ class MenuCard extends StatelessWidget {
                 ...List.generate(
                   menuItemsList.length,
                   (index) {
-                    return Obx(() => _mainController.rebuildPaymentSheet.value
+                    return _mainController.rebuildPaymentSheet
                         ? getFirstFoodMenuCard(index, context)
-                        : getFirstFoodMenuCard(index, context));
+                        : getFirstFoodMenuCard(index, context);
                   },
                 ),
 
@@ -136,16 +135,16 @@ class MenuCard extends StatelessWidget {
           // String restaurantId = r; // Replace this with the actual restaurantId
           _mainController.onAdd(menuItemsList[index], restaurantId,
               restaurantName, restaurantImageUrl);
-          // _mainController.rebuildPaymentSheet.value =
-          //     !_mainController.rebuildPaymentSheet.value;
+          // _mainController.rebuildPaymentSheet =
+          //     !_mainController.rebuildPaymentSheet;
         },
         onRemove: () {
           //  String restaurantId = menuItemsList[index]
           //   .parentId!; // Replace this with the actual restaurantId
           _mainController.onRemove(menuItemsList[index], restaurantId,
               restaurantName, restaurantImageUrl);
-          // _mainController.rebuildPaymentSheet.value =
-          //     !_mainController.rebuildPaymentSheet.value;
+          // _mainController.rebuildPaymentSheet =
+          //     !_mainController.rebuildPaymentSheet;
         },
       ),
     );

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nightly/extensions/common_extensions.dart';
 import 'package:nightly/repositries/login_service.dart';
@@ -14,39 +13,39 @@ import 'package:nightly/utils/constants/country_codes.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 
 ///Auth Controller
-class LoginController extends GetxController {
+class LoginController {
   ///initializing variables for auth controller
-  RxBool isPhoneValid = false.obs;
-  RxBool isNameValid = false.obs;
-  RxBool isEmailValid = false.obs;
-  RxBool isOtpValid = false.obs;
+  bool isPhoneValid = false;
+  bool isNameValid = false;
+  bool isEmailValid = false;
+  bool isOtpValid = false;
 
-  RxBool otpSent = false.obs;
-  RxBool otpVerified = false.obs;
+  bool otpSent = false;
+  bool otpVerified = false;
 
-  RxBool showNoWidget = true.obs;
-  RxBool isCustomerExist = false.obs;
+  bool showNoWidget = true;
+  bool isCustomerExist = false;
 
-  RxBool showOtpInvalid = false.obs;
+  bool showOtpInvalid = false;
 
-  RxBool enablePhoneField = true.obs;
-  RxBool isLoading = false.obs;
-  RxString navigateToTab = AppStrings.kFoodCourts.obs;
-  RxString tagWidgetTitle = AppStrings.bFoodCourt.obs;
+  bool enablePhoneField = true;
+  bool isLoading = false;
+  String navigateToTab = AppStrings.kFoodCourts;
+  String tagWidgetTitle = AppStrings.bFoodCourt;
   List countryCodes = CountryCodes.countryCodes['countries']!;
   TextEditingController countryCodeSearchController = TextEditingController();
   TextEditingController otpController = TextEditingController();
-  RxString selectedCode = '+91'.obs;
-  RxInt currentTimerValue = 30.obs;
+  String selectedCode = '+91';
+  int currentTimerValue = 30;
   late Timer timer;
   final globalkey = GlobalKey<FormState>();
-  RxBool isPrivacyPolicyAccepted = false.obs;
+  bool isPrivacyPolicyAccepted = false;
 
-  @override
-  void onInit() {
-    super.onInit();
-    otpautodetect();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   otpautodetect();
+  // }
 
   void otpautodetect() {
     otpController.addListener(() {});
@@ -72,14 +71,11 @@ class LoginController extends GetxController {
       }
       if (filteredCountryCodes.isNotEmpty) {
         countryCodes = filteredCountryCodes;
-        update();
       } else {
         countryCodes.clear();
-        update();
       }
     } else {
       countryCodes = CountryCodes.countryCodes['countries']!;
-      update();
     }
   }
 
@@ -87,34 +83,34 @@ class LoginController extends GetxController {
   Future<void> validatePhoneNumber(String inputText) async {
     if (inputText.isNumericOnly) {
       if (inputText.trim().length == 10) {
-        otpSent.value = false;
+        otpSent = false;
         await checkIfCustomerExist(inputText.trim());
-        isPhoneValid.value = true;
+        isPhoneValid = true;
       } else {
-        isPhoneValid.value = false;
-        showNoWidget.value = true;
+        isPhoneValid = false;
+        showNoWidget = true;
       }
     } else {
-      isPhoneValid.value = false;
+      isPhoneValid = false;
     }
   }
 
   //* OTP textfield data validation
   void validateOtp(String inputText) {
-    showOtpInvalid.value = false;
+    showOtpInvalid = false;
     if (inputText.isNumericOnly && inputText.length == 6) {
-      isOtpValid.value = true;
+      isOtpValid = true;
     } else {
-      isOtpValid.value = false;
+      isOtpValid = false;
     }
   }
 
   //* Name textfield data validation
   void validateName(String inputText) {
     if (inputText.isEmpty) {
-      isNameValid.value = false;
+      isNameValid = false;
     } else {
-      isNameValid.value = true;
+      isNameValid = true;
     }
   }
 
@@ -122,18 +118,18 @@ class LoginController extends GetxController {
   void validateEmail(String inputText) {
     // if (RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(inputText))
     if (inputText.isValidEmail()) {
-      //isEmailValid.value = true;
+      //isEmailValid = true;
       if (inputText.contains("icicihfc.com")) {
-        isEmailValid.value = false;
+        isEmailValid = false;
       } else {
         if ('@'.allMatches(inputText).length > 1) {
-          isEmailValid.value = false;
+          isEmailValid = false;
         } else {
-          isEmailValid.value = true;
+          isEmailValid = true;
         }
       }
     } else {
-      isEmailValid.value = false;
+      isEmailValid = false;
     }
   }
 
@@ -143,30 +139,30 @@ class LoginController extends GetxController {
       final bool model = await loginService.checkUserExists(phoneNumber.trim());
       Logger.info("checkIfCustomerExist : $model");
       if (model) {
-        isCustomerExist.value = true;
+        isCustomerExist = true;
       } else {
-        isCustomerExist.value = false;
-        showNoWidget.value = false;
+        isCustomerExist = false;
+        showNoWidget = false;
       }
-      Logger.info("checkIfCustomerExist : ${isCustomerExist.value}");
+      Logger.info("checkIfCustomerExist : $isCustomerExist");
     } catch (error, stackTrace) {
       Logger.error(error.toString(), stackTrace);
-      isCustomerExist.value = false;
+      isCustomerExist = false;
     }
   }
 
   ///function to send otp
   void sendOtp(String phoneNumber, String email) async {
-    if (isPhoneValid.value) {
-      isLoading.value = true;
-      enablePhoneField.value = false;
+    if (isPhoneValid) {
+      isLoading = true;
+      enablePhoneField = false;
       bool responseMessage = await loginService.loginUser(phoneNumber.trim());
       if (responseMessage) {
-        otpSent.value = true;
-        isLoading.value = false;
+        otpSent = true;
+        isLoading = false;
         resetAndStartTimer();
       } else {
-        isLoading.value = false;
+        isLoading = false;
       }
     }
   }
@@ -179,18 +175,18 @@ class LoginController extends GetxController {
   void verifyOtp(String phoneNumber, String otp, String name, String email,
       bool isPrivacyPolicyAccepted, BuildContext context) async {
     try {
-      if (isPhoneValid.value && isCustomerExist.value
+      if (isPhoneValid && isCustomerExist
           ? true
-          : isNameValid.value && isCustomerExist.value
+          : isNameValid && isCustomerExist
               ? true
-              : isEmailValid.value && isOtpValid.value) {
-        isLoading.value = true;
+              : isEmailValid && isOtpValid) {
+        isLoading = true;
         UserModel? userModel =
             await loginService.verifyOTP(phoneNumber, int.parse(otp));
 
         if (userModel != null) {
-          showOtpInvalid.value = false;
-          otpVerified.value = true;
+          showOtpInvalid = false;
+          otpVerified = true;
 
           // try {
           //   await FCMNotificationManager
@@ -200,49 +196,42 @@ class LoginController extends GetxController {
           // }
 
           resetValues();
-          isLoading.value = false;
+          isLoading = false;
           otpController.clear();
           context.go('/restaurant');
           //  Navigator.of(context).pop();
-          if (!isCustomerExist.value) {
+          if (!isCustomerExist) {
           } else {}
         } else {
-          showOtpInvalid.value = true;
+          showOtpInvalid = true;
         }
-        enablePhoneField.value = true;
-        isLoading.value = false;
+        enablePhoneField = true;
+        isLoading = false;
       }
     } catch (error, stackTrace) {
       Logger.error(error.toString(), stackTrace);
     }
-    isLoading.value = false;
+    isLoading = false;
   }
 
   ///function to reset and start timer
   void resetAndStartTimer() {
-    currentTimerValue.value = 30;
+    currentTimerValue = 30;
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (currentTimerValue.value == 0) {
+      if (currentTimerValue == 0) {
         timer.cancel();
-        enablePhoneField.value = true;
+        enablePhoneField = true;
       } else {
-        currentTimerValue.value--;
+        currentTimerValue--;
       }
     });
   }
 
   ///function to reset the values
   void resetValues() {
-    otpSent.value = false;
-    otpVerified.value = false;
-    isPhoneValid.value = false;
-    showNoWidget.value = true;
-  }
-
-  ///dispose function
-  @override
-  void dispose() {
-    otpController.dispose();
-    super.dispose();
+    otpSent = false;
+    otpVerified = false;
+    isPhoneValid = false;
+    showNoWidget = true;
   }
 }

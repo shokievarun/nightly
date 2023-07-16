@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/models/restaurant.dart';
 import 'package:nightly/repositries/restaurant_services.dart';
@@ -20,34 +19,34 @@ enum SortOptions {
   experience
 }
 
-class RestaurantListController extends GetxController {
+class RestaurantListController {
   SortOptions sortBy = SortOptions.distance;
   SortOptions sortByHighToLow = SortOptions.highToLow;
-  RxList<Restaurant> restaurants = <Restaurant>[].obs;
-  final MainController _mainController = Get.find();
-  RxBool isLoadingList = false.obs;
+  List<Restaurant> restaurants = <Restaurant>[];
+  final MainController _mainController = MainController();
+  bool isLoadingList = false;
   int pageStart = 0;
   int pageSize = 50;
   List<String> emptyListOfString = <String>[];
-  RxBool isOnline = false.obs;
+  bool isOnline = false;
 
   checkOnline() async {
-    isOnline.value = await _mainController.isOnline();
+    isOnline = await _mainController.isOnline();
   }
 
   fetchRestaurants(bool isFromRefresh) async {
     checkOnline();
-    isFromRefresh ? 0 : _mainController.isLoaderActive.value = true;
-    _mainController.isLoadingList.value = true;
+    isFromRefresh ? 0 : _mainController.isLoaderActive = true;
+    _mainController.isLoadingList = true;
     try {
       await _mainController.saveCurrentLocation();
     } catch (err) {
-      _mainController.isLoaderActive.value = false;
-      _mainController.isLoadingList.value = false;
+      _mainController.isLoaderActive = false;
+      _mainController.isLoadingList = false;
       Logger.error("@save current location:" + err.toString());
     }
 
-    if (isOnline.value) {
+    if (isOnline) {
       try {
         final response = await RestaurantService().getRestaurants();
 
@@ -62,27 +61,27 @@ class RestaurantListController extends GetxController {
             if (restaurants.isNotEmpty) {
               this.restaurants.addAll(restaurants);
             }
-            _mainController.isLoaderActive.value = false;
-            _mainController.isLoadingList.value = false;
+            _mainController.isLoaderActive = false;
+            _mainController.isLoadingList = false;
           });
         } else {
-          _mainController.isLoaderActive.value = false;
-          _mainController.isLoadingList.value = false;
+          _mainController.isLoaderActive = false;
+          _mainController.isLoadingList = false;
         }
         // }
         // ).catchError((err) {
-        //   _mainController.isLoaderActive.value = false;
-        //   _mainController.isLoadingList.value = false;
+        //   _mainController.isLoaderActive = false;
+        //   _mainController.isLoadingList = false;
         //   AppLogger.error("@while getting restaurants:" + err.toString());
         // });
       } catch (err) {
-        _mainController.isLoaderActive.value = false;
-        _mainController.isLoadingList.value = false;
+        _mainController.isLoaderActive = false;
+        _mainController.isLoadingList = false;
         Logger.error("@fetch cooks:" + err.toString());
       }
     } else {
-      _mainController.isLoaderActive.value = false;
-      _mainController.isLoadingList.value = false;
+      _mainController.isLoaderActive = false;
+      _mainController.isLoadingList = false;
     }
   }
 

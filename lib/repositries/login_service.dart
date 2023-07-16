@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/models/user_model.dart';
 import 'package:nightly/utils/constants/api_endpoints.dart';
@@ -8,7 +7,7 @@ import 'package:nightly/utils/logging/app_logger.dart';
 class LoginService {
   static final LoginService _instance = LoginService._internal();
   final Dio _dio = Dio();
-  final MainController _mainController = Get.find();
+  final MainController _mainController = MainController();
 
   factory LoginService() {
     return _instance;

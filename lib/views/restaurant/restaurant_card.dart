@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
 
@@ -22,9 +22,9 @@ class RestaurantCard extends StatefulWidget {
 }
 
 class _RestaurantCardState extends State<RestaurantCard> {
-  final MainController _mainController = Get.find();
-  RxString name = "".obs;
-  RxDouble price = 0.0.obs;
+  final MainController _mainController = MainController();
+  String name = "";
+  double price = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +64,15 @@ class _RestaurantCardState extends State<RestaurantCard> {
                         enlargeCenterPage: true,
                         scrollDirection: Axis.horizontal,
                         onPageChanged: (indexValue, b) {
-                          name.value = widget.restaurant.categories![0]
+                          name = widget.restaurant.categories![0]
                               .menuItems![indexValue].name!;
-                          price.value = widget.restaurant.categories![0]
+                          price = widget.restaurant.categories![0]
                               .menuItems![indexValue].price!;
                         }),
                     items: widget.restaurant.categories![0].menuItems!
                         .map((menuItem) {
-                      name.value = menuItem.name!;
-                      price.value = menuItem.price!;
+                      name = menuItem.name!;
+                      price = menuItem.price!;
                       // return Builder(
                       //   builder: (BuildContext context) {
                       return SizedBox(
@@ -228,24 +228,22 @@ class _RestaurantCardState extends State<RestaurantCard> {
                   ),
                 ],
               ),
-              Obx(
-                () => Positioned(
-                  top: 8.0,
-                  left: 8.0,
-                  child: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    color: Colors.black.withOpacity(0.6),
-                    child: Text(
-                      '${name.value}  \$${price.value.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+              Positioned(
+                top: 8.0,
+                left: 8.0,
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  color: Colors.black.withOpacity(0.6),
+                  child: Text(
+                    '$name  \$${price.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

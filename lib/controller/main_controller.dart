@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:nightly/models/user_model.dart';
@@ -13,21 +12,21 @@ import 'package:nightly/utils/constants/hive_boxes.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MainController extends GetxController {
+class MainController {
   final Box orderBox = Hive.box('order');
-  RxString paymenttype = "".obs;
-  RxMap cartMap = {}.obs;
-  RxBool rebuildPaymentSheet = false.obs;
+  String paymenttype = "";
+  Map cartMap = {};
+  bool rebuildPaymentSheet = false;
   LatLng currentLatLng = LatLng(13.027966, 77.540916);
-  RxString currentLocation = "Dubai".obs;
-  RxDouble latitude = 13.027966.obs;
-  RxDouble longitude = 77.540916.obs;
-  RxBool isLoaderActive = false.obs;
-  RxBool isLoadingList = false.obs;
-  RxBool isLocationEnabled = false.obs;
+  String currentLocation = "Dubai";
+  double latitude = 13.027966;
+  double longitude = 77.540916;
+  bool isLoaderActive = false;
+  bool isLoadingList = false;
+  bool isLocationEnabled = false;
 
   static bool isLocationPermitted = false;
-  RxBool isServiceLocationEnabled = false.obs;
+  bool isServiceLocationEnabled = false;
   loc.PermissionStatus? _permissionGranted;
   loc.Location location = loc.Location();
 
@@ -75,7 +74,7 @@ class MainController extends GetxController {
         image: restaurantImageUrl,
         menuItems: existingItems,
         lastOpenedDateTime: DateTime.now());
-    cartMap.refresh();
+    cartMap;
     savePendingOrder();
   }
 
@@ -110,13 +109,13 @@ class MainController extends GetxController {
         menuItems: existingItems,
         lastOpenedDateTime: DateTime.now(),
         orderStatus: 'created');
-    cartMap.refresh();
+    cartMap;
     savePendingOrder();
   }
 
   // List<dynamic> sortedOrderModels = [];
   // int limitLength() {
-  //   sortedOrderModels = cartMap.values.toList();
+  //   sortedOrderModels = cartMaps.toList();
   //   // sortedOrderModels.sort((b, a) {
   //   //   DateTime? dateTimeA = a.lastOpenedDateTime;
   //   //   DateTime? dateTimeB = b.lastOpenedDateTime;
@@ -129,8 +128,8 @@ class MainController extends GetxController {
   //   //   }
   //   //   return 0;
   //   // });
-  //   return cartMap.values.length > 4 ? 4 : cartMap.values.length;
-  //   //  return cartMap.values.length;
+  //   return cartMaps.length > 4 ? 4 : cartMaps.length;
+  //   //  return cartMaps.length;
   // }
 
   List<dynamic> getLatestRestaurant() {
@@ -200,9 +199,9 @@ class MainController extends GetxController {
   }
 
   setServiceLocationEnabled() async {
-    isServiceLocationEnabled.value = await location.serviceEnabled();
+    isServiceLocationEnabled = await location.serviceEnabled();
 
-    if (!isServiceLocationEnabled.value) {
+    if (!isServiceLocationEnabled) {
       await location.requestService();
     }
   }
@@ -229,9 +228,9 @@ class MainController extends GetxController {
   }
 
   getPendingOrder() async {
-    cartMap.value = await orderBox.get('orderPending') ?? {};
+    cartMap = await orderBox.get('orderPending') ?? {};
     // ignore: invalid_use_of_protected_member
-    Logger.info("cart value while getting ${cartMap.value.toString()}");
+    Logger.info("cart value while getting ${cartMap.toString()}");
   }
 
   savePendingOrder() async {
@@ -247,12 +246,12 @@ class MainController extends GetxController {
   }
 
   saveLastSelectedPaymentType(String type) async {
-    paymenttype.value = type;
+    paymenttype = type;
     await orderBox.put('paymenttype', type);
   }
 
   getLastSelectedPaymentType() {
-    paymenttype.value = orderBox.get('paymenttype') ?? "";
+    paymenttype = orderBox.get('paymenttype') ?? "";
   }
 
   num getTotalAmountOfCart(String id) {
@@ -274,10 +273,10 @@ class MainController extends GetxController {
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted != loc.PermissionStatus.denied &&
         _permissionGranted != loc.PermissionStatus.deniedForever) {
-      isLocationEnabled.value = true;
+      isLocationEnabled = true;
       await location.requestPermission();
     } else {
-      isLocationEnabled.value = false;
+      isLocationEnabled = false;
     }
   }
 
@@ -294,46 +293,46 @@ class MainController extends GetxController {
       if (placemarks[0].subLocality != null &&
           placemarks[0].subLocality != "Unnamed" &&
           cnt < 2) {
-        currentLocation.value = placemarks[0].subLocality.toString();
+        currentLocation = placemarks[0].subLocality.toString();
         cnt++;
       }
       if (placemarks[0].locality != null &&
           placemarks[0].locality != "Unnamed" &&
           cnt < 2 &&
-          !currentLocation.value.contains(placemarks[0].locality.toString())) {
-        currentLocation.value = (cnt == 1
-            ? "${currentLocation.value}, ${placemarks[0].locality}"
+          !currentLocation.contains(placemarks[0].locality.toString())) {
+        currentLocation = (cnt == 1
+            ? "$currentLocation, ${placemarks[0].locality}"
             : placemarks[0].locality!);
         cnt++;
       }
       if (placemarks[0].subAdministrativeArea != null &&
           placemarks[0].subAdministrativeArea != "Unnamed" &&
           cnt < 2 &&
-          !currentLocation.value
+          !currentLocation
               .contains(placemarks[0].subAdministrativeArea.toString())) {
-        currentLocation.value = (cnt == 1
-            ? "${currentLocation.value}, ${placemarks[0].subAdministrativeArea}"
+        currentLocation = (cnt == 1
+            ? "$currentLocation, ${placemarks[0].subAdministrativeArea}"
             : placemarks[0].subAdministrativeArea!);
         cnt++;
       }
       if (placemarks[0].administrativeArea != null &&
           placemarks[0].administrativeArea == "Unnamed" &&
           cnt < 2 &&
-          currentLocation.value
+          currentLocation
               .contains(placemarks[0].administrativeArea.toString())) {
-        currentLocation.value = (cnt == 1
-            ? "${currentLocation.value}, ${placemarks[0].administrativeArea}"
+        currentLocation = (cnt == 1
+            ? "$currentLocation, ${placemarks[0].administrativeArea}"
             : placemarks[0].administrativeArea!);
         cnt++;
       }
       if (placemarks[0].country != null &&
           placemarks[0].country != "Unnamed") {}
 
-      List<String> locationList = currentLocation.value.split(",");
-      currentLocation.value = locationList.last;
+      List<String> locationList = currentLocation.split(",");
+      currentLocation = locationList.last;
 
-      latitude.value = position.latitude!;
-      longitude.value = position.longitude!;
+      latitude = position.latitude!;
+      longitude = position.longitude!;
     } catch (err) {
       Logger.error("@ saveCurrent location " + err.toString());
     }
@@ -342,19 +341,19 @@ class MainController extends GetxController {
 
   //Future<loc.LocationData>
   requestPermissionAgain() async {
-    isLocationEnabled.value = false;
-    isServiceLocationEnabled.value = false;
+    isLocationEnabled = false;
+    isServiceLocationEnabled = false;
 
     loc.LocationData _locationData;
 
-    isServiceLocationEnabled.value = await location.serviceEnabled();
+    isServiceLocationEnabled = await location.serviceEnabled();
     _permissionGranted = await location.hasPermission();
-    Logger.info("location service value: ${isServiceLocationEnabled.value}");
+    Logger.info("location service value: $isServiceLocationEnabled");
     Logger.info("app location value: $_permissionGranted");
-    if (isServiceLocationEnabled.value) {
+    if (isServiceLocationEnabled) {
       if (_permissionGranted != loc.PermissionStatus.denied &&
           _permissionGranted != loc.PermissionStatus.deniedForever) {
-        isLocationEnabled.value = true;
+        isLocationEnabled = true;
         Future.delayed(const Duration(milliseconds: 1000), () async {
           _locationData = await location.getLocation();
           return _locationData;
@@ -366,7 +365,7 @@ class MainController extends GetxController {
             _permissionGranted == loc.PermissionStatus.deniedForever) {
           return Future.error('APP Location permission are disabled.');
         } else {
-          isLocationEnabled.value = true;
+          isLocationEnabled = true;
           Future.delayed(const Duration(milliseconds: 1000), () async {
             _locationData = await location.getLocation();
             return _locationData;
@@ -379,19 +378,19 @@ class MainController extends GetxController {
   }
 
   Future<loc.LocationData> getCurrentLocationData() async {
-    isLocationEnabled.value = false;
-    isServiceLocationEnabled.value = false;
+    isLocationEnabled = false;
+    isServiceLocationEnabled = false;
 
     loc.LocationData _locationData;
 
-    isServiceLocationEnabled.value = await location.serviceEnabled();
+    isServiceLocationEnabled = await location.serviceEnabled();
     _permissionGranted = await location.hasPermission();
-    Logger.info("location service value: ${isServiceLocationEnabled.value}");
+    Logger.info("location service value: $isServiceLocationEnabled");
     Logger.info("app location value: $_permissionGranted");
-    if (isServiceLocationEnabled.value) {
+    if (isServiceLocationEnabled) {
       if (_permissionGranted != loc.PermissionStatus.denied &&
           _permissionGranted != loc.PermissionStatus.deniedForever) {
-        isLocationEnabled.value = true;
+        isLocationEnabled = true;
         _locationData = await location.getLocation();
         return _locationData;
       } else {
@@ -401,7 +400,7 @@ class MainController extends GetxController {
             _permissionGranted == loc.PermissionStatus.deniedForever) {
           return Future.error('APP Location permission are disabled.');
         } else {
-          isLocationEnabled.value = true;
+          isLocationEnabled = true;
           _locationData = await location.getLocation();
           return _locationData;
         }
@@ -455,7 +454,7 @@ class MainController extends GetxController {
     //       mapType: MapType.google,
     //       destination: Coords(13.0399748, 77.51834839999992),
     //       origin: Coords(
-    //           latitude.value, longitude.value),
+    //           latitude, longitude),
     //       originTitle: "Your Location",
     //       destinationTitle: "nightly",
     //       directionsMode: DirectionsMode.driving);

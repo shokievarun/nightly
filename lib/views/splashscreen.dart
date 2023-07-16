@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:nightly/controller/life_cycle_controller.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
@@ -18,8 +16,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    MainController _mainController = Get.put(MainController());
-    Get.put(LifeCycleController());
+    MainController _mainController = MainController();
+    // Get.put(LifeCycleController());
     _mainController.userModel = _mainController.getUser();
     _mainController.getPendingOrder();
     _mainController.getLastSelectedPaymentType();

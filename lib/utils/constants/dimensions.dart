@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 class Dimensions {
 //consider  ScreenWidth = 375;
 //consider   screenHeight = 812;

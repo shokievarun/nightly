@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/main_controller.dart';
 
 class PaymentSelectionScreen extends StatelessWidget {
-  final MainController _mainController = Get.find();
+  final MainController _mainController = MainController();
 
   PaymentSelectionScreen({Key? key}) : super(key: key);
   void handlePaymentSelection(BuildContext context, String paymentType) {

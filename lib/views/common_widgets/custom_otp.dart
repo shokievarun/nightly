@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nightly/controller/login_controller.dart';
 import 'package:nightly/utils/constants/app_colors.dart';
 import 'package:nightly/utils/constants/app_strings.dart';
@@ -9,8 +8,9 @@ import 'package:pinput/pinput.dart';
 import '../../utils/constants/app_styles.dart';
 // import 'package:pinput/pinput.dart';
 
-class CustomOtpField extends GetView<LoginController> {
-  const CustomOtpField({
+// ignore: must_be_immutable
+class CustomOtpField extends StatelessWidget {
+  CustomOtpField({
     required this.textController,
     required this.onChanged,
     required this.onOtpResend,
@@ -30,6 +30,8 @@ class CustomOtpField extends GetView<LoginController> {
   final bool disableOtpResend;
   final void Function() onOtpResend;
   final void Function(String)? onComplete;
+
+  LoginController controller = LoginController();
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +88,10 @@ class CustomOtpField extends GetView<LoginController> {
                           : AppColors.kBlue),
                 ),
               ),
-              Obx(
-                () => Text(
-                  '00:' +
-                      '${controller.currentTimerValue.value}'.padLeft(2, '0'),
-                  style: AppTextStyles.kOpenSans40012Black.copyWith(
-                      color: AppColors.kBlack.withOpacity(0.6), fontSize: 16),
-                ),
+              Text(
+                '00:' + '${controller.currentTimerValue}'.padLeft(2, '0'),
+                style: AppTextStyles.kOpenSans40012Black.copyWith(
+                    color: AppColors.kBlack.withOpacity(0.6), fontSize: 16),
               ),
             ],
           ),

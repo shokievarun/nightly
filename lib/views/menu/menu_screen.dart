@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
-
 import 'package:nightly/views/menu/menu_card.dart';
 import 'package:nightly/models/restaurant.dart';
 import 'package:nightly/views/common_widgets/rounded_button.dart';
@@ -18,7 +16,7 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  final MainController _mainController = Get.find();
+  final MainController _mainController = MainController();
 
   @override
   void initState() {
@@ -36,9 +34,9 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Scaffold(
-          bottomNavigationBar: _mainController.cartMap
-                      .containsKey(widget.restaurant.id) &&
+    return Scaffold(
+      bottomNavigationBar:
+          _mainController.cartMap.containsKey(widget.restaurant.id) &&
                   _mainController.getCartCount(widget.restaurant.id!) > 0
               ? Container(
                   decoration: const BoxDecoration(
@@ -92,35 +90,35 @@ class _MenuScreenState extends State<MenuScreen> {
                       ]),
                 )
               : null,
-          body: ListView.builder(
-            shrinkWrap: true,
-            physics: const ScrollPhysics(),
-            itemCount: widget.restaurant.categories == null
-                ? 0
-                : widget.restaurant.categories!.length,
-            padding: const EdgeInsets.only(top: 50, bottom: 50),
-            //  controller: widget.childController,
-            itemBuilder: (context, topIndex) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MenuCard(
-                    //  controller: controller,
-                    topIndex: topIndex,
-                    categoryName: widget.restaurant.categories![topIndex].name!,
-                    menuItemsList:
-                        widget.restaurant.categories![topIndex].menuItems!,
+      body: ListView.builder(
+        shrinkWrap: true,
+        physics: const ScrollPhysics(),
+        itemCount: widget.restaurant.categories == null
+            ? 0
+            : widget.restaurant.categories!.length,
+        padding: const EdgeInsets.only(top: 50, bottom: 50),
+        //  controller: widget.childController,
+        itemBuilder: (context, topIndex) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MenuCard(
+                //  controller: controller,
+                topIndex: topIndex,
+                categoryName: widget.restaurant.categories![topIndex].name!,
+                menuItemsList:
+                    widget.restaurant.categories![topIndex].menuItems!,
 
-                    restaurantId: widget.restaurant.id!,
-                    restaurantName: widget.restaurant.name ?? "",
-                    restaurantImageUrl: widget.restaurant.image ?? "",
-                    // preorderSlots: null,
-                  ),
-                ],
-              );
-            },
-          ),
-        ));
+                restaurantId: widget.restaurant.id!,
+                restaurantName: widget.restaurant.name ?? "",
+                restaurantImageUrl: widget.restaurant.image ?? "",
+                // preorderSlots: null,
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

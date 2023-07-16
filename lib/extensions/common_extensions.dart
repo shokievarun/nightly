@@ -6,3 +6,10 @@ extension EmailValidation on String {
     return emailRegex.hasMatch(this);
   }
 }
+
+extension NumericValidation on String {
+  bool get isNumericOnly {
+    final numericRegex = RegExp(r'^[0-9]+$');
+    return numericRegex.hasMatch(this);
+  }
+}

@@ -1,11 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nightly/controller/home_controller.dart';
 import 'package:nightly/controller/main_controller.dart';
 import 'package:nightly/controller/restaurant_list_controller.dart';
-import 'package:nightly/models/models.dart';
 import 'package:nightly/models/restaurant.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
@@ -21,18 +20,27 @@ class RestaurantListScreen extends StatefulWidget {
 
 class _RestaurantListScreenState extends State<RestaurantListScreen> {
   final RestaurantListController _restaurantListController =
-      Get.put(RestaurantListController());
+      RestaurantListController();
   final ScrollController _scrollController = ScrollController();
   int _visibleIndex = 0;
-  final MainController _mainController = Get.find();
+  final MainController _mainController = MainController();
+  final HomeController _homeController = HomeController();
   final RefreshController _refreshController = RefreshController();
+
   @override
   void initState() {
     // _restaurantListController = Get.find();
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _homeController.checkLocationPermissions();
       //  Future.delayed(const Duration(milliseconds: 2500), () {
-      _restaurantListController.fetchRestaurants(false);
+      _mainController.isLoaderActive = true;
+      _mainController.isLoadingList = true;
+      setState(() {});
+      await _restaurantListController.fetchRestaurants(false);
+      _mainController.isLoaderActive = false;
+      _mainController.isLoadingList = false;
+      setState(() {});
       // });
     });
     super.initState();
@@ -64,7 +72,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Scaffold(
+    return Scaffold(
         bottomNavigationBar: _mainController.cartMap.isNotEmpty &&
                 _mainController.checkifCartHasZeroItemCount() > 0
             ? Container(
@@ -112,9 +120,14 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
-                                    Get.bottomSheet(
-                                      Container(
-                                          height: Dimensions.screenHeight,
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
                                           color: Colors.white,
                                           child: Column(
                                             children: [
@@ -131,12 +144,6 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                             .id) >
                                                     0)
                                                   Container(
-                                                    //  height: Dimensions.screenHeight * 0.1,
-                                                    // margin: EdgeInsets.only(
-                                                    //     bottom: 10,
-                                                    //     top: 10 + (i * 4),
-                                                    //     right: 40 - (i * 12),
-                                                    //     left: 40 - (i * 12)),
                                                     decoration: BoxDecoration(
                                                       color: Colors.white,
                                                       borderRadius:
@@ -187,9 +194,10 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                         ),
                                                         ElevatedButton(
                                                           onPressed: () {
-                                                            context.go(
-                                                                "/restaurant/cart",
-                                                                extra: {
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                '/restaurant/cart',
+                                                                arguments: {
                                                                   'order': _mainController
                                                                           .cartMap[
                                                                       _mainController
@@ -197,7 +205,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                                               i]
                                                                           .restaurantId]!,
                                                                   'restaurant':
-                                                                      Restaurant()
+                                                                      Restaurant(),
                                                                 });
                                                           },
                                                           child: const Text(
@@ -205,9 +213,11 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                  )
+                                                  ),
                                             ],
-                                          )),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
                                   child: Column(
@@ -259,90 +269,86 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
         ),
         backgroundColor: ColorConstants.appBackgroundTheme,
         body: WillPopScope(
-            onWillPop: () async {
-              // Show a confirmation dialog
-              bool confirmExit = await showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Exit App'),
-                    content: Text('Are you sure you want to exit?'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('No'),
-                        onPressed: () {
-                          Navigator.of(context).pop(
-                              false); // Return false to indicate user doesn't want to exit
-                        },
-                      ),
-                      TextButton(
-                        child: Text('Yes'),
-                        onPressed: () {
-                          Navigator.of(context).pop(
-                              true); // Return true to indicate user wants to exit
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+          onWillPop: () async {
+            // Show a confirmation dialog
+            bool confirmExit = await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Exit App'),
+                  content: const Text('Are you sure you want to exit?'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('No'),
+                      onPressed: () {
+                        Navigator.of(context).pop(
+                            false); // Return false to indicate user doesn't want to exit
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Yes'),
+                      onPressed: () {
+                        Navigator.of(context).pop(
+                            true); // Return true to indicate user wants to exit
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
 
-              // Return the user's choice
-              return confirmExit ?? false;
-            },
-            child: Obx(
-              () => Stack(
-                children: [
-                  Column(
-                    children: [
-                      Expanded(
-                        child: SmartRefresher(
-                          controller: _refreshController,
-                          enablePullDown: true,
-                          header: const CustomRefresh(),
-                          onRefresh: () async {
-                            await _restaurantListController
-                                .fetchRestaurants(true);
-                            _refreshController.refreshCompleted();
-                          },
-                          child: Obx(
-                            () => !_restaurantListController.isOnline.value
-                                ? Center(
-                                    child: Container(
-                                      padding: const EdgeInsets.only(top: 15),
-                                      child: Text(
-                                        'No Internet! Check Connectivity',
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          color: ColorConstants.appTheme,
-                                          // fontFamily: 'Poppins',
-                                          fontSize: Dimensions.fontSize16,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : commonListView(),
-                          ),
-                        ),
-                      ),
-                    ],
+            // Return the user's choice
+            return confirmExit;
+          },
+          child: Stack(
+            children: [
+              Column(children: [
+                Expanded(
+                  child: SmartRefresher(
+                    controller: _refreshController,
+                    enablePullDown: true,
+                    header: const CustomRefresh(),
+                    onRefresh: () async {
+                      await _restaurantListController.fetchRestaurants(true);
+                      _refreshController.refreshCompleted();
+                    },
+                    child: !_restaurantListController.isOnline
+                        ? Center(
+                            child: Container(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Text(
+                                'No Internet! Check Connectivity',
+                                maxLines: 2,
+                                style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                  color: ColorConstants.appTheme,
+                                  // fontFamily: 'Poppins',
+                                  fontSize: Dimensions.fontSize16,
+                                ),
+                              ),
+                            ),
+                          )
+                        : commonListView(),
                   ),
-                  _mainController.isLoaderActive.value
-                      ? const CommonProgressIndicator()
-                      : Container()
-                ],
-              ),
-            ))));
+                ),
+              ]),
+              _mainController.isLoaderActive
+                  ? const CommonProgressIndicator()
+                  : Container()
+            ],
+          ),
+        ));
   }
 
   Widget commonListView() {
-    return Obx(() => !_mainController.isServiceLocationEnabled.value &&
-            !_mainController.isLoaderActive.value
-        ? _restaurantListController.getGPSWidget()
-        : _restaurantListController.restaurants.isEmpty
+    return
+        // !_mainController.isServiceLocationEnabled &&
+        //         !_mainController.isLoaderActive
+        //     ? _restaurantListController.getGPSWidget()
+        //     :
+        _restaurantListController.restaurants.isEmpty
             ? Center(
-                child: Obx(() => _mainController.isLoadingList.value
+                child: _mainController.isLoadingList
                     ? Container(
                         padding: const EdgeInsets.only(top: 15),
                         child: const Text(
@@ -350,7 +356,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                           style: TextStyle(color: ColorConstants.appTheme),
                         ),
                       )
-                    : _mainController.isLocationEnabled.value
+                    : _mainController.isLocationEnabled
                         ? Container(
                             padding: const EdgeInsets.only(top: 15),
                             child: const Text(
@@ -358,7 +364,7 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                               style: TextStyle(color: ColorConstants.appTheme),
                             ),
                           )
-                        : _restaurantListController.getAppLocationWidget()))
+                        : _restaurantListController.getAppLocationWidget())
             : Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -376,6 +382,6 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                     ),
                   ),
                 ],
-              ));
+              );
   }
 }
