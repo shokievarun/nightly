@@ -33,79 +33,68 @@ class CounterButton extends StatelessWidget {
                 : AppColors.kYellowBorderColor),
         borderRadius: BorderRadius.circular(4),
       ),
-      child:
-          // Obx(
-          //   () =>
-          //  Get.find<OrderController>().disableCounterButton.value
-          //     ? Container(
-          //         height: 32,
-          //         width: 100,
-          //         child: CupertinoActivityIndicator(
-          //           color: AppColors.kYellowBorderColor,
-          //         ))
-          //     :
-          count == '0'
-              ? InkWell(
-                  onTap: onAdd,
-                  child: Center(
-                      child: Text(
-                    'ADD',
-                    style: AppTextStyles.kRoboto70014Black.copyWith(
-                        color: AppColors.kOfferTextColor,
-                        fontSize: Dimensions.fontSize14),
-                  )),
-                )
-              : Container(
-                  color: count != '0'
-                      ? AppColors.kCartSnackBarColor
-                      : isEditable
-                          ? AppColors.kWhite
-                          : AppColors.kDisabledGrey,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: onRemove,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.remove,
-                              size: Dimensions.height15,
-                              color: count != '0'
-                                  ? AppColors.kWhite
-                                  : AppColors.kCartSnackBarColor,
-                              //  color: AppColors.kBlack.withOpacity(0.4),
-                            ),
-                          ),
+      child: count == '0'
+          ? InkWell(
+              onTap: onAdd,
+              child: Center(
+                  child: Text(
+                'ADD',
+                style: AppTextStyles.kRoboto70014Black.copyWith(
+                    color: AppColors.kOfferTextColor,
+                    fontSize: Dimensions.fontSize14),
+              )),
+            )
+          : Container(
+              color: count != '0'
+                  ? AppColors.kCartSnackBarColor
+                  : isEditable
+                      ? AppColors.kWhite
+                      : AppColors.kDisabledGrey,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: onRemove,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.remove,
+                          size: Dimensions.height15,
+                          color: count != '0'
+                              ? AppColors.kWhite
+                              : AppColors.kCartSnackBarColor,
+                          //  color: AppColors.kBlack.withOpacity(0.4),
                         ),
                       ),
-                      Text(
-                        count,
-                        style: AppTextStyles.kRoboto70014Black.copyWith(
-                            color: count != '0'
-                                ? AppColors.kWhite
-                                : AppColors.kCartSnackBarColor,
-                            fontSize: Dimensions.fontSize14),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: onAdd,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.add,
-                              size: Dimensions.height15,
-                              color: count != '0'
-                                  ? AppColors.kWhite
-                                  : AppColors.kCartSnackBarColor,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   ),
-                ),
+                  Text(
+                    count,
+                    style: AppTextStyles.kRoboto70014Black.copyWith(
+                        color: count != '0'
+                            ? AppColors.kWhite
+                            : AppColors.kCartSnackBarColor,
+                        fontSize: Dimensions.fontSize14),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: onAdd,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.add,
+                          size: Dimensions.height15,
+                          color: count != '0'
+                              ? AppColors.kWhite
+                              : AppColors.kCartSnackBarColor,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
       // ),
     );
   }

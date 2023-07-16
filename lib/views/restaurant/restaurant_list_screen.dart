@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
-import 'package:nightly/views/cart_screen.dart';
 import 'package:nightly/controller/restaurant_list_controller.dart';
+import 'package:nightly/models/models.dart';
+import 'package:nightly/models/restaurant.dart';
 import 'package:nightly/utils/constants/color_constants.dart';
 import 'package:nightly/utils/constants/dimensions.dart';
 import 'package:nightly/views/common_widgets/common_progress_indicator.dart';
@@ -186,34 +187,18 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                                                         ),
                                                         ElevatedButton(
                                                           onPressed: () {
-                                                            // Get.to(() => CartScreen(
-                                                            //     _mainController
-                                                            //             .cartMap[
-                                                            //         _mainController
-                                                            //             .getLatestRestaurant()[
-                                                            //                 i]
-                                                            //             .id]!,
-                                                            //     true));
-                                                            context.goNamed(
-                                                              "/cart",
-                                                              extra: _mainController
-                                                                      .cartMap[
-                                                                  _mainController
-                                                                      .getLatestRestaurant()[
-                                                                          i]
-                                                                      .id]!,
-                                                            );
-                                                            // Get.bottomSheet(
-                                                            //   Container(
-                                                            //     height: Dimensions
-                                                            //         .screenHeight,
-                                                            //     color:
-                                                            //         Colors.white,
-                                                            //     //child:
-                                                            //   ),
-                                                            // );
-                                                            // showModalBottomSheet(context: context, builder: ())
-                                                            // View cart button action
+                                                            context.go(
+                                                                "/restaurant/cart",
+                                                                extra: {
+                                                                  'order': _mainController
+                                                                          .cartMap[
+                                                                      _mainController
+                                                                          .getLatestRestaurant()[
+                                                                              i]
+                                                                          .restaurantId]!,
+                                                                  'restaurant':
+                                                                      Restaurant()
+                                                                });
                                                           },
                                                           child: const Text(
                                                               'View Cart'),
@@ -248,114 +233,13 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
                               ),
                               ElevatedButton(
                                 onPressed: () {
-                                  context.goNamed(
-                                    "/cart",
-                                    extra: _mainController.cartMap[
+                                  context.go("/restaurant/cart", extra: {
+                                    'order': _mainController.cartMap[
                                         _mainController
                                             .getLatestRestaurant()[i]
-                                            .id]!,
-                                  );
-                                  // Get.bottomSheet(
-                                  //   Container(
-                                  //       height: Dimensions.screenHeight,
-                                  //       color: Colors.white,
-                                  //       child: Column(
-                                  //         children: [
-                                  //           for (int i = _mainController
-                                  //                       .getLatestRestaurant()
-                                  //                       .length -
-                                  //                   1;
-                                  //               i >= 0;
-                                  //               i--)
-                                  //             if (_mainController.getCartCount(
-                                  //                     _mainController
-                                  //                         .getLatestRestaurant()[
-                                  //                             i]
-                                  //                         .id) >
-                                  //                 0)
-                                  //               Container(
-                                  //                 //  height: Dimensions.screenHeight * 0.1,
-                                  //                 // margin: EdgeInsets.only(
-                                  //                 //     bottom: 10,
-                                  //                 //     top: 10 + (i * 4),
-                                  //                 //     right: 40 - (i * 12),
-                                  //                 //     left: 40 - (i * 12)),
-                                  //                 decoration: BoxDecoration(
-                                  //                   color: Colors.white,
-                                  //                   borderRadius:
-                                  //                       BorderRadius.circular(
-                                  //                           10),
-                                  //                   border: Border.all(
-                                  //                     color: Colors.grey,
-                                  //                     width: 2,
-                                  //                   ),
-                                  //                 ),
-                                  //                 padding:
-                                  //                     EdgeInsets.only(top: 10),
-                                  //                 child: Row(
-                                  //                   children: [
-                                  //                     SizedBox(width: 10),
-                                  //                     Expanded(
-                                  //                       child: Column(
-                                  //                         mainAxisAlignment:
-                                  //                             MainAxisAlignment
-                                  //                                 .center,
-                                  //                         children: [
-                                  //                           Text(
-                                  //                             _mainController
-                                  //                                 .getLatestRestaurant()[
-                                  //                                     i]
-                                  //                                 .name,
-                                  //                             style: TextStyle(
-                                  //                                 fontSize: 16),
-                                  //                           ),
-                                  //                           Text(
-                                  //                             _mainController
-                                  //                                 .getCartCount(
-                                  //                                     _mainController
-                                  //                                         .getLatestRestaurant()[
-                                  //                                             i]
-                                  //                                         .id)
-                                  //                                 .toString(),
-                                  //                             style: TextStyle(
-                                  //                                 fontSize: 16),
-                                  //                           ),
-                                  //                         ],
-                                  //                       ),
-                                  //                     ),
-                                  //                     ElevatedButton(
-                                  //                       onPressed: () {
-                                  //                         Get.to(() => CartScreen(
-                                  //                             _mainController
-                                  //                                     .cartMap[
-                                  //                                 _mainController
-                                  //                                     .getLatestRestaurant()[
-                                  //                                         i]
-                                  //                                     .id]));
-                                  //                         // Get.bottomSheet(
-                                  //                         //   Container(
-                                  //                         //     height: Dimensions
-                                  //                         //         .screenHeight,
-                                  //                         //     color:
-                                  //                         //         Colors.white,
-                                  //                         //     //child:
-                                  //                         //   ),
-                                  //                         // );
-                                  //                         // showModalBottomSheet(context: context, builder: ())
-                                  //                         // View cart button action
-                                  //                       },
-                                  //                       child:
-                                  //                           Text('View Cart'),
-                                  //                     ),
-                                  //                   ],
-                                  //                 ),
-                                  //               )
-                                  //         ],
-                                  //       )),
-                                  // );
-
-                                  // showModalBottomSheet(context: context, builder: ())
-                                  // View cart button action
+                                            .restaurantId]!,
+                                    'restaurant': Restaurant()
+                                  });
                                 },
                                 child: const Text('View Cart'),
                               ),
@@ -374,49 +258,82 @@ class _RestaurantListScreenState extends State<RestaurantListScreen> {
           title: const Text("restaurantify"),
         ),
         backgroundColor: ColorConstants.appBackgroundTheme,
-        body: Obx(
-          () => Stack(
-            children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: SmartRefresher(
-                      controller: _refreshController,
-                      enablePullDown: true,
-                      header: const CustomRefresh(),
-                      onRefresh: () async {
-                        await _restaurantListController.fetchRestaurants(true);
-                        _refreshController.refreshCompleted();
-                      },
-                      child: Obx(
-                        () => !_restaurantListController.isOnline.value
-                            ? Center(
-                                child: Container(
-                                  padding: const EdgeInsets.only(top: 15),
-                                  child: Text(
-                                    'No Internet! Check Connectivity',
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                      color: ColorConstants.appTheme,
-                                      // fontFamily: 'Poppins',
-                                      fontSize: Dimensions.fontSize16,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : commonListView(),
+        body: WillPopScope(
+            onWillPop: () async {
+              // Show a confirmation dialog
+              bool confirmExit = await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Exit App'),
+                    content: Text('Are you sure you want to exit?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('No'),
+                        onPressed: () {
+                          Navigator.of(context).pop(
+                              false); // Return false to indicate user doesn't want to exit
+                        },
                       ),
-                    ),
+                      TextButton(
+                        child: Text('Yes'),
+                        onPressed: () {
+                          Navigator.of(context).pop(
+                              true); // Return true to indicate user wants to exit
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              // Return the user's choice
+              return confirmExit ?? false;
+            },
+            child: Obx(
+              () => Stack(
+                children: [
+                  Column(
+                    children: [
+                      Expanded(
+                        child: SmartRefresher(
+                          controller: _refreshController,
+                          enablePullDown: true,
+                          header: const CustomRefresh(),
+                          onRefresh: () async {
+                            await _restaurantListController
+                                .fetchRestaurants(true);
+                            _refreshController.refreshCompleted();
+                          },
+                          child: Obx(
+                            () => !_restaurantListController.isOnline.value
+                                ? Center(
+                                    child: Container(
+                                      padding: const EdgeInsets.only(top: 15),
+                                      child: Text(
+                                        'No Internet! Check Connectivity',
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                          color: ColorConstants.appTheme,
+                                          // fontFamily: 'Poppins',
+                                          fontSize: Dimensions.fontSize16,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : commonListView(),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+                  _mainController.isLoaderActive.value
+                      ? const CommonProgressIndicator()
+                      : Container()
                 ],
               ),
-              _mainController.isLoaderActive.value
-                  ? const CommonProgressIndicator()
-                  : Container()
-            ],
-          ),
-        )));
+            ))));
   }
 
   Widget commonListView() {

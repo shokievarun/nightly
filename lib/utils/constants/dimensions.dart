@@ -4,9 +4,9 @@ class Dimensions {
 //consider  ScreenWidth = 375;
 //consider   screenHeight = 812;
 
-  static double screenHeight = Get.context!.height;
+  static double screenHeight = 800;
 
-  static double screenWidth = Get.context!.width;
+  static double screenWidth = 400;
 
 //dynamic width
 

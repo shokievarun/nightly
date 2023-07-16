@@ -8,7 +8,7 @@ import 'package:nightly/models/models.dart';
 import 'package:nightly/models/latlng.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:location/location.dart' as loc;
-import 'package:nightly/utils/constants/color_constants.dart';
+
 import 'package:nightly/utils/constants/hive_boxes.dart';
 import 'package:nightly/utils/logging/app_logger.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -335,7 +335,6 @@ class MainController extends GetxController {
       latitude.value = position.latitude!;
       longitude.value = position.longitude!;
     } catch (err) {
-      snackBar("Error", err.toString());
       Logger.error("@ saveCurrent location " + err.toString());
     }
     return true;
@@ -436,13 +435,6 @@ class MainController extends GetxController {
   //   }
   // }
 
-  void snackBar(String title, String subTitle) {
-    Get.snackbar(title, subTitle,
-        backgroundColor: ColorConstants.appBackgroundTheme,
-        colorText: ColorConstants.appTheme,
-        snackPosition: SnackPosition.BOTTOM);
-  }
-
   launchMap(double lat, double lng, String loc) async {
     try {
       var isValid = await MapLauncher.isMapAvailable(MapType.google);
@@ -453,11 +445,8 @@ class MainController extends GetxController {
             title: "shopify",
             description: loc,
             zoom: 50);
-      } else {
-        snackBar("Error", "Could not connect try after sometime");
-      }
+      } else {}
     } catch (err) {
-      snackBar("Error", "Could not connect try after sometime");
       Logger.error("@ map launch: " + err.toString());
     }
 
@@ -491,14 +480,9 @@ class MainController extends GetxController {
       if (await isOnline()) {
         if (await canLaunchUrl(url)) {
           await launchUrl(url);
-        } else {
-          snackBar("Error", "Could not connect");
-        }
-      } else {
-        snackBar("No Internet", "Check your connectivity");
-      }
+        } else {}
+      } else {}
     } catch (err) {
-      snackBar("Error", "Could not connect try after sometime");
       Logger.error("@brower tap: " + err.toString());
     }
   }
@@ -508,11 +492,8 @@ class MainController extends GetxController {
     try {
       if (await canLaunchUrl(_url)) {
         await launchUrl(_url);
-      } else {
-        snackBar("Error", "Could not dial");
-      }
+      } else {}
     } catch (e) {
-      snackBar("Error", "Could not dial");
       Logger.error("@phone tap: " + e.toString());
     }
   }
@@ -526,7 +507,6 @@ class MainController extends GetxController {
       //   snackBar("Error", 'Whatsapp not installed');
       // }
     } catch (e) {
-      snackBar("Error", 'Whatsapp not installed');
       Logger.error("@whatsapp tap: " + e.toString());
     }
   }

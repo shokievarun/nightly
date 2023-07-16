@@ -68,8 +68,6 @@ class RestaurantListController extends GetxController {
         } else {
           _mainController.isLoaderActive.value = false;
           _mainController.isLoadingList.value = false;
-          _mainController.snackBar(
-              response['data']['msg'], 'Check your connectivity');
         }
         // }
         // ).catchError((err) {
@@ -83,7 +81,6 @@ class RestaurantListController extends GetxController {
         Logger.error("@fetch cooks:" + err.toString());
       }
     } else {
-      _mainController.snackBar("No Internet", 'Check your connectivity');
       _mainController.isLoaderActive.value = false;
       _mainController.isLoadingList.value = false;
     }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nightly/models/user_model.dart';
 import 'package:nightly/models/models.dart';
+import 'package:nightly/utils/constants/dimensions.dart';
 import 'package:nightly/utils/constants/hive_boxes.dart';
-import 'package:nightly/views/routes.dart';
-import 'package:nightly/views/splashscreen.dart';
+import 'package:nightly/extensions/routes.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
       routerConfig: router,
       builder: (BuildContext context, child) {
         final MediaQueryData data = MediaQuery.of(context);
+        Dimensions.screenHeight = MediaQuery.of(context).size.height;
+        Dimensions.screenWidth = MediaQuery.of(context).size.width;
         return MediaQuery(
           data: data.copyWith(textScaleFactor: 1.0),
           child: child!,

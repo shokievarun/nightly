@@ -2,14 +2,15 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nightly/extensions/common_extensions.dart';
 import 'package:nightly/repositries/login_service.dart';
 import 'package:nightly/models/user_model.dart';
-import 'package:nightly/utils/constants/app_colors.dart';
+
 import 'package:nightly/utils/constants/app_strings.dart';
-import 'package:nightly/utils/constants/common_functions.dart';
+
 import 'package:nightly/utils/constants/country_codes.dart';
-import 'package:nightly/utils/constants/dimensions.dart';
+
 import 'package:nightly/utils/logging/app_logger.dart';
 
 ///Auth Controller
@@ -124,29 +125,9 @@ class LoginController extends GetxController {
       //isEmailValid.value = true;
       if (inputText.contains("icicihfc.com")) {
         isEmailValid.value = false;
-        showCustomStatusSnackBar(
-          backgroundColor: AppColors.kErrorRed,
-          text: 'Login with your email id', //'Login with personal email id',
-          iconPath: "",
-          iconHeight: Dimensions.height20,
-          iconWidth: Dimensions.height20,
-          iconBackgroundColor: AppColors.kWhite,
-          textFontSize: 15,
-          textColor: AppColors.kWhite,
-        );
       } else {
         if ('@'.allMatches(inputText).length > 1) {
           isEmailValid.value = false;
-          showCustomStatusSnackBar(
-            backgroundColor: AppColors.kErrorRed,
-            text: 'Enter correct email id',
-            iconPath: "",
-            iconHeight: Dimensions.height20,
-            iconWidth: Dimensions.height20,
-            iconBackgroundColor: AppColors.kWhite,
-            textFontSize: 15,
-            textColor: AppColors.kWhite,
-          );
         } else {
           isEmailValid.value = true;
         }
@@ -221,9 +202,8 @@ class LoginController extends GetxController {
           resetValues();
           isLoading.value = false;
           otpController.clear();
-          Navigator.of(context).pop();
-          //Get.back();
-          //   Get.to(() => const Home());
+          context.go('/restaurant');
+          //  Navigator.of(context).pop();
           if (!isCustomerExist.value) {
           } else {}
         } else {

@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nightly/controller/main_controller.dart';
+import 'package:nightly/models/restaurant.dart';
 import 'package:nightly/repositries/order_service.dart';
-import 'package:nightly/views/payment_screen.dart';
+
 import 'package:nightly/models/models.dart';
-import 'package:nightly/utils/constants/app_colors.dart';
-import 'package:nightly/utils/constants/common_functions.dart';
+
 import 'package:nightly/utils/constants/dimensions.dart';
 
 // ignore: must_be_immutable
 class CartScreen extends StatefulWidget {
-  late OrderModel orderModel;
-  CartScreen(
-      {Key? key, required bool isFromHome, required OrderModel orderModel})
+  OrderModel orderModel;
+  Restaurant restaurant;
+  CartScreen({Key? key, required this.orderModel, required this.restaurant})
       : super(key: key);
   //  {Key? key}) : super(key: key);
 
@@ -53,22 +53,15 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {});
   }
 
-  void openPaymentSheet() async {
-    context.go('/selectpayment');
-    // Get.to(() => PaymentSelectionScreen());
-    // String? result = await Get.to<String>(PaymentSelectionScreen());
-    // if (result != null) {
-    //   setState(() {
-    //     selectedPaymentType = result;
-    //   });
-    // }
+  void openPaymentSheet(restaurant, order) async {
+    if (restaurant.categories == null) {
+      context.go('/restaurant/cart/selectpayment',
+          extra: {'restaurant': restaurant, 'order': order});
+    } else {
+      context.go('/restaurant/menu/cart/selectpayment',
+          extra: {'restaurant': restaurant, 'order': order});
+    }
   }
-
-  // void clearPaymentType() {
-  //   setState(() {
-  //     selectedPaymentType = null;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +121,10 @@ class _CartScreenState extends State<CartScreen> {
                   if (_mainController.paymenttype.value == "")
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: openPaymentSheet,
+                        onPressed: () {
+                          openPaymentSheet(
+                              widget.restaurant, widget.orderModel);
+                        },
                         icon: const Icon(Icons.payment),
                         label: const Text("Select Payment"),
                       ),
@@ -140,7 +136,10 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           Obx(
                             () => ElevatedButton.icon(
-                              onPressed: openPaymentSheet,
+                              onPressed: () {
+                                openPaymentSheet(
+                                    widget.restaurant, widget.orderModel);
+                              },
                               icon: const Icon(Icons.payment),
                               label: Text(_mainController.paymenttype.value),
                             ),
@@ -163,17 +162,14 @@ class _CartScreenState extends State<CartScreen> {
                                       .remove(orderModel.restaurantId);
                                   _mainController.cartMap.refresh();
                                 }
+                                context.go('/restaurant');
                                 //  if (widget.isFromHome) {
-                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
                                 // } else {
                                 //   Navigator.of(context).pop();
                                 //   Navigator.of(context).pop();
                                 // }
 
-                                showCustomStatusSnackBar(
-                                    text: "Order Placed",
-                                    backgroundColor: AppColors.kFoodGreen,
-                                    iconPath: "");
                               }
                               // Perform checkout or payment logic here
                             },

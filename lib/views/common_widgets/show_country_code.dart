@@ -30,7 +30,7 @@ showCountryCodePicker(BuildContext context) {
                           right: Dimensions.width16,
                           top: Dimensions.height20),
                       child: titleWidget(() {
-                        Get.back();
+                        //Get.back();
                         _loginController.countryCodeSearchController.clear();
                         _loginController.countryCodes =
                             CountryCodes.countryCodes['countries']!;

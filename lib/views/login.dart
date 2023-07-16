@@ -187,18 +187,14 @@ class _LoginPageState extends State<LoginPage> {
                                       const Text(
                                           "I have read and agree to the "),
                                       InkWell(
-                                        onTap: () {
-                                          // Get.to(() => privacypolicyscreen());
-                                        },
+                                        onTap: () {},
                                         child: const Text("Privacy Policy ",
                                             style: TextStyle(
                                                 color: AppColors.kBlue)),
                                       ),
                                       const Text("and "),
                                       InkWell(
-                                        onTap: () {
-                                          //    Get.to(() => termsandcondition());
-                                        },
+                                        onTap: () {},
                                         child: const Text(
                                             "Terms and Conditions ",
                                             style: TextStyle(
